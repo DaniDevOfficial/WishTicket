@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
+	"wishticket/modules/user"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -21,15 +21,16 @@ func initDB() {
 }
 
 func main() {
-	handleRequest()
-}
 
-func helloWorld(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(w, "Hello World CurrentTime: %s", time.Now())
+	initDB()
+
+	router := http.NewServeMux()
+
+	user.RegisterUserRoute(router, db)
+
+	fmt.Println("Server is listening on http://localhost:8000/")
+	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }
 
 func handleRequest() {
-	http.HandleFunc("/", helloWorld)
-	fmt.Println("Server is listening on http://localhost:8000/")
-	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }
