@@ -29,7 +29,7 @@ func main() {
 	user.RegisterUserRoute(router, db)
 
 	fmt.Println("Server is listening on http://localhost:8000/")
-	log.Fatal(http.ListenAndServe("localhost:8000", nil))
+	log.Fatal(http.ListenAndServe("localhost:8000", router))
 }
 
 func handleRequest() {
