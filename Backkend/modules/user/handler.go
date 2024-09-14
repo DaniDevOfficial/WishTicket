@@ -2,7 +2,6 @@ package user
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 )
 
@@ -17,5 +16,4 @@ func handleUsers(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	if r.Method == http.MethodPost {
 		CreateNewUser(w, r, db)
 	}
-	fmt.Fprintf(w, "wasd")
 }
