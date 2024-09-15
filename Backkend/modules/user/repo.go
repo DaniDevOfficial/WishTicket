@@ -12,6 +12,14 @@ func GetUserIdByName(username string, db *sql.DB) (int, error) {
 	return userId, err
 }
 
+func GetUserPasswordHashByName(username string, db *sql.DB) (string, error) {
+	sql := "SELECT passwordHash FROM user WHERE username = ?"
+	row := db.QueryRow(sql, username)
+	var passwordHash string
+	err := row.Scan(&passwordHash)
+	return passwordHash, err
+}
+
 func CreateUserInDB(userData DBNewUser, db *sql.DB) error {
 	sql := "INSERT INTO user (username, email, passwordHash) VALUES (?, ?, ?)"
 	stmt, err := db.Prepare(sql)
