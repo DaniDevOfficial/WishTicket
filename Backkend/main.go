@@ -1,9 +1,11 @@
 package main
+
 import (
 	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
+	"wishticket/modules/ticket"
 	"wishticket/modules/user"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -26,10 +28,7 @@ func main() {
 	router := http.NewServeMux()
 
 	user.RegisterUserRoute(router, db)
-
+	ticket.RegisterTicketRoute(router, db)
 	fmt.Println("Server is listening on http://localhost:8000/")
 	log.Fatal(http.ListenAndServe("localhost:8000", router))
-}
-
-func handleRequest() {
 }

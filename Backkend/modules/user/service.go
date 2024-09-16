@@ -83,5 +83,5 @@ func SignIn(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 	fmt.Fprintf(w, "yayyy your logged in 😊😊😊")
-
+	// TODO: Should return a JWT
 }
