@@ -31,13 +31,6 @@ func CreateUserInDB(userData DBNewUser, db *sql.DB) error {
 	return err
 }
 
-type UserFromDB struct {
-	user_id      int
-	username     string
-	email        string
-	passwordHash string
-}
-
 func GetUserById(id int, db *sql.DB) (UserFromDB, error) {
 
 	sql := "SELECT * FROM user WHERE user_id = ?"
@@ -46,5 +39,5 @@ func GetUserById(id int, db *sql.DB) (UserFromDB, error) {
 	var userData UserFromDB
 	err := row.Scan(&userData)
 	return userData, err
-
 }
+

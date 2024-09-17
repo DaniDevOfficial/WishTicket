@@ -20,7 +20,7 @@ CREATE TABLE ticket (
     FOREIGN KEY (creator_id) REFERENCES user(user_id)
 );
 
--- Create 'ticket_asigned' table (typo corrected to 'ticket_assigned')
+-- Create 'ticket_assigned' table
 CREATE TABLE ticket_assigned (
     ticket_id INT,
     assigned_id INT,

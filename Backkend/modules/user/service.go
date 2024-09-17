@@ -9,30 +9,6 @@ import (
 	"wishticket/util"
 )
 
-type RequestNewUser struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
-type DBNewUser struct {
-	username     string
-	email        string
-	passwordHash string
-}
-
-type DBUserData struct {
-	user_id      int
-	username     string
-	email        string
-	passwordHash string
-}
-
-type SignInCredentials struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
 func CreateNewUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	var newUser RequestNewUser
 	err := json.NewDecoder(r.Body).Decode(&newUser)
@@ -58,6 +34,7 @@ func CreateNewUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		email:        newUser.Email,
 		passwordHash: hashedPassword,
 	}
+
 	fmt.Println(userInDB)
 	CreateUserInDB(userInDB, db)
 }

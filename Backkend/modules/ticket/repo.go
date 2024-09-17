@@ -70,3 +70,30 @@ func insertNewTicketStatus(ticket_id int, tx *sql.Tx) error {
 	}
 	return nil
 }
+
+func GetTicketById(ticketId int, db *sql.DB) (*TicketFromDB, error) {
+
+	sql := "SELECT * FROM ticket WHERE ticket_id = ?"
+
+	row := db.QueryRow(sql, ticketId)
+	var ticket TicketFromDB
+	err := row.Scan(&ticket.ticket_id, &ticket.title, &ticket.description, &ticket.creator_id)
+	if err != nil {
+		return nil, err
+	}
+	return &ticket, nil
+}
+
+func CreateNewAssignment(newAssignment AddAssigneeRequest, db *sql.DB) error {
+	sql := "INSERT INTO ticket_assigned (ticket_id, assigned_id) VALUES (?, ?)"
+	stmt, err := db.Prepare(sql)
+	if err != nil {
+		return err 
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(newAssignment.TicketId, newAssignment.AssignedId)
+	if err != nil {
+		return err
+	}
+	return nil
+}
