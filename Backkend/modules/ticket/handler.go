@@ -23,6 +23,9 @@ func handleTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	if r.Method == http.MethodPost {
 		CreateNewTicket(w, r, db)
 	}
+	if r.Method == http.MethodGet {
+		GetAllOwnedTickets(w, r, db)
+	}
 }
 
 func handleAssignee(w http.ResponseWriter, r *http.Request, db *sql.DB) {

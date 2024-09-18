@@ -16,18 +16,18 @@ type TicketRequest struct {
 }
 
 type StatusRequest struct {
-	TicketId int `json:"ticketId"`
+	TicketId int    `json:"ticketId"`
 	Status   string `json:"status"`
 }
 
 type AddAssigneeRequest struct {
 	TicketId   int `json:"ticketId"`
-	AssignedId int `json:"assignedId"`
+	AssignedId int `json:"assignedId"`  
 }
 
 type TicketFromDB struct {
-	ticket_id   int
-	title       string
-	description sql.NullString
-	creator_id  int
+	TicketId    int            `json:"ticketId"`
+	Title       string         `json:"title"`
+	Description sql.NullString `json:"description"`
+	CreatorId   int            `json:"creatorId"`
 }

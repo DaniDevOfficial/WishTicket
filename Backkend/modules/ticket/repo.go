@@ -4,6 +4,30 @@ import (
 	"database/sql"
 )
 
+// Ticket
+
+func GetAllOwnedTicketsFromDB(userId int, db *sql.DB) ([]TicketFromDB, error) {
+	sql := "SELECT ticket_id, title, description, creator_id FROM ticket WHERE creator_id = ?"
+	var tickets []TicketFromDB
+	rows, err := db.Query(sql, userId)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var ticket TicketFromDB
+		err := rows.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.CreatorId)
+		if err != nil {
+			return nil, err
+		}
+		tickets = append(tickets, ticket)
+	}
+
+	return tickets, nil
+
+}
+
 func CreateNewTicketInDB(ticketData TicketForInsert, db *sql.DB) error {
 
 	tx, err := db.Begin()
@@ -30,7 +54,6 @@ func CreateNewTicketInDB(ticketData TicketForInsert, db *sql.DB) error {
 	}
 
 	return nil
-
 }
 
 func insertNewTicket(ticketData TicketForInsert, tx *sql.Tx) (int, error) {
@@ -56,6 +79,21 @@ func insertNewTicket(ticketData TicketForInsert, tx *sql.Tx) (int, error) {
 	return int(lastId), nil
 }
 
+func GetTicketById(ticketId int, db *sql.DB) (*TicketFromDB, error) {
+
+	sql := "SELECT * FROM ticket WHERE ticket_id = ?"
+
+	row := db.QueryRow(sql, ticketId)
+	var ticket TicketFromDB
+	err := row.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.CreatorId)
+	if err != nil {
+		return nil, err
+	}
+	return &ticket, nil
+}
+
+// Status
+
 func insertNewTicketStatus(ticket_id int, tx *sql.Tx) error {
 	sql := "INSERT INTO ticket_status (ticket_id, status) VALUES (?, ?)"
 	stmt, err := tx.Prepare(sql)
@@ -69,19 +107,6 @@ func insertNewTicketStatus(ticket_id int, tx *sql.Tx) error {
 		return err
 	}
 	return nil
-}
-
-func GetTicketById(ticketId int, db *sql.DB) (*TicketFromDB, error) {
-
-	sql := "SELECT * FROM ticket WHERE ticket_id = ?"
-
-	row := db.QueryRow(sql, ticketId)
-	var ticket TicketFromDB
-	err := row.Scan(&ticket.ticket_id, &ticket.title, &ticket.description, &ticket.creator_id)
-	if err != nil {
-		return nil, err
-	}
-	return &ticket, nil
 }
 
 func UpdateTicketStatus(newStatus StatusRequest, db *sql.DB) (sql.Result, error) {
@@ -101,6 +126,10 @@ func UpdateTicketStatus(newStatus StatusRequest, db *sql.DB) (sql.Result, error)
 	return result, nil
 }
 
+// Comments
+
+// assignee
+
 func CreateNewAssignment(newAssignment AddAssigneeRequest, db *sql.DB) error {
 	sql := "INSERT INTO ticket_assigned (ticket_id, assigned_id) VALUES (?, ?)"
 	stmt, err := db.Prepare(sql)
@@ -114,3 +143,5 @@ func CreateNewAssignment(newAssignment AddAssigneeRequest, db *sql.DB) error {
 	}
 	return nil
 }
+
+// Other

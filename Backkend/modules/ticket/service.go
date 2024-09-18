@@ -8,6 +8,30 @@ import (
 	"net/http"
 )
 
+// Tasks
+
+func GetAllOwnedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+
+	// TODO: Get id from jwt
+	userId := 1
+	tickets, err := GetAllOwnedTicketsFromDB(userId, db)
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
+	log.Printf("User %d has %d tickets\n", userId, len(tickets))
+
+	// Respond with tickets in JSON format
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(tickets)
+	if err != nil {
+		log.Println("Error encoding tickets:", err)
+		http.Error(w, `{"error": "Failed to encode tickets"}`, http.StatusInternalServerError)
+		return
+	}
+}
+
 func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	// TODO: some auth before letting Creation happen but idk how to do this currenty
 
@@ -58,7 +82,7 @@ func ChangeTicketStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	if ticket.creator_id != creatorId {
+	if ticket.CreatorId != creatorId {
 		fmt.Fprintf(w, "Authorization Error")
 		log.Println("Wrong Creator id")
 		return
@@ -70,11 +94,15 @@ func ChangeTicketStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		log.Println(err)
 		return
 	}
+	log.Println("Updated Status")
 	fmt.Fprintf(w, "Updated Status")
 }
 
-func AddAssigneeToTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+func CommentOnTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+	// TODO: Crud on comments
+}
 
+func AddAssigneeToTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	var addAssignee AddAssigneeRequest
 	err := json.NewDecoder(r.Body).Decode(&addAssignee)
 	if err != nil {
@@ -96,7 +124,7 @@ func AddAssigneeToTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	if ticket.creator_id != creatorId {
+	if ticket.CreatorId != creatorId {
 		fmt.Fprintf(w, "Authorization Error")
 		log.Println("Wrong Creator id")
 		return
@@ -110,4 +138,8 @@ func AddAssigneeToTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 	//TODO: Success handler
+}
+
+func RemoveAssigneeFromTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+	//TODO: implement
 }
