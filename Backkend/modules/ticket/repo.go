@@ -84,11 +84,28 @@ func GetTicketById(ticketId int, db *sql.DB) (*TicketFromDB, error) {
 	return &ticket, nil
 }
 
+func UpdateTicketStatus(newStatus StatusRequest, db *sql.DB) (sql.Result, error) {
+
+	sql := "UPDATE ticket_status SET status = ? WHERE ticket_id = ?"
+
+	stmt, err := db.Prepare(sql)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	result, err := stmt.Exec(newStatus.Status, newStatus.TicketId)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
 func CreateNewAssignment(newAssignment AddAssigneeRequest, db *sql.DB) error {
 	sql := "INSERT INTO ticket_assigned (ticket_id, assigned_id) VALUES (?, ?)"
 	stmt, err := db.Prepare(sql)
 	if err != nil {
-		return err 
+		return err
 	}
 	defer stmt.Close()
 	_, err = stmt.Exec(newAssignment.TicketId, newAssignment.AssignedId)

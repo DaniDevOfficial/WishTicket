@@ -35,7 +35,7 @@ func GetUserById(id int, db *sql.DB) (UserFromDB, error) {
 
 	sql := "SELECT * FROM user WHERE user_id = ?"
 	row := db.QueryRow(sql, id)
-
+	
 	var userData UserFromDB
 	err := row.Scan(&userData)
 	return userData, err

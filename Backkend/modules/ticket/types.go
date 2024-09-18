@@ -15,6 +15,11 @@ type TicketRequest struct {
 	Description string `json:"description"`
 }
 
+type StatusRequest struct {
+	TicketId int `json:"ticketId"`
+	Status   string `json:"status"`
+}
+
 type AddAssigneeRequest struct {
 	TicketId   int `json:"ticketId"`
 	AssignedId int `json:"assignedId"`

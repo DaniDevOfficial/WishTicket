@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"wishticket/util"
+	"wishticket/util/hashing"
 )
 
 func CreateNewUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
@@ -23,7 +23,7 @@ func CreateNewUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	hashedPassword, err := util.HashPassword(newUser.Password)
+	hashedPassword, err := hashing.HashPassword(newUser.Password)
 	if err != nil {
 		log.Println(err)
 		return
@@ -55,7 +55,7 @@ func SignIn(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	if !util.CheckHashedString(passwordHash, credentials.Password) {
+	if !hashing.CheckHashedString(passwordHash, credentials.Password) {
 		fmt.Fprintf(w, "Wrong username or Password")
 		return
 	}

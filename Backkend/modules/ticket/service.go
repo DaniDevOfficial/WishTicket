@@ -35,6 +35,44 @@ func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 }
 
+func ChangeTicketStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+
+	var newStatus StatusRequest
+
+	err := json.NewDecoder(r.Body).Decode(&newStatus)
+
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
+
+	//TODO: get userId form jwt
+	creatorId := 1
+
+	ticket, err := GetTicketById(newStatus.TicketId, db)
+	// TODO: Either has to be creator or Assignee
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
+
+	if ticket.creator_id != creatorId {
+		fmt.Fprintf(w, "Authorization Error")
+		log.Println("Wrong Creator id")
+		return
+	}
+
+	_, err = UpdateTicketStatus(newStatus, db)
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
+	fmt.Fprintf(w, "Updated Status")
+}
+
 func AddAssigneeToTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	var addAssignee AddAssigneeRequest
@@ -47,8 +85,9 @@ func AddAssigneeToTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	// later get creator id from getTicket, but for now this is fine
 	// and check it if the jwt creator id is the same as the creator id from the ticket
-	creator_id := 1
+	creatorId := 1
 
+	// TODO: Either has to be creator or Assignee
 	ticket, err := GetTicketById(addAssignee.TicketId, db)
 
 	if err != nil {
@@ -57,7 +96,7 @@ func AddAssigneeToTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	if ticket.creator_id != creator_id {
+	if ticket.creator_id != creatorId {
 		fmt.Fprintf(w, "Authorization Error")
 		log.Println("Wrong Creator id")
 		return
@@ -70,4 +109,5 @@ func AddAssigneeToTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		log.Println(err)
 		return
 	}
+	//TODO: Success handler
 }
