@@ -22,7 +22,7 @@ type StatusRequest struct {
 
 type AddAssigneeRequest struct {
 	TicketId   int `json:"ticketId"`
-	AssignedId int `json:"assignedId"`  
+	AssignedId int `json:"assignedId"`
 }
 
 type TicketFromDB struct {
@@ -30,4 +30,5 @@ type TicketFromDB struct {
 	Title       string         `json:"title"`
 	Description sql.NullString `json:"description"`
 	CreatorId   int            `json:"creatorId"`
+	Status      string         `json:"status"`
 }

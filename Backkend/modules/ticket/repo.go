@@ -7,7 +7,20 @@ import (
 // Ticket
 
 func GetAllOwnedTicketsFromDB(userId int, db *sql.DB) ([]TicketFromDB, error) {
-	sql := "SELECT ticket_id, title, description, creator_id FROM ticket WHERE creator_id = ?"
+	sql := `
+		SELECT 
+			t.ticket_id, 
+			t.title, 
+			t.description, 
+			t.creator_id,
+			ts.status
+		FROM 
+			ticket t
+		JOIN
+			ticket_status ts ON t.ticket_id = ts.ticket_id
+		WHERE
+			t.creator_id = ?
+	`
 	var tickets []TicketFromDB
 	rows, err := db.Query(sql, userId)
 
@@ -17,7 +30,7 @@ func GetAllOwnedTicketsFromDB(userId int, db *sql.DB) ([]TicketFromDB, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var ticket TicketFromDB
-		err := rows.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.CreatorId)
+		err := rows.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.CreatorId, &ticket.Status)
 		if err != nil {
 			return nil, err
 		}
@@ -26,6 +39,46 @@ func GetAllOwnedTicketsFromDB(userId int, db *sql.DB) ([]TicketFromDB, error) {
 
 	return tickets, nil
 
+}
+
+func GetAssignedTicketsFromDB(userId int, db *sql.DB) ([]TicketFromDB, error) {
+
+	sql := `
+		SELECT DISTINCT
+			t.ticket_id,
+			t.title,
+			t.description,
+			t.creator_id,
+			ts.status
+		FROM
+			ticket t
+		JOIN
+			ticket_assigned ta ON ta.ticket_id = t.ticket_id
+		JOIN
+			ticket_status ts ON t.ticket_id = ts.ticket_id
+		WHERE
+			ta.assigned_id = ?
+	`
+	var tickets []TicketFromDB
+	rows, err := db.Query(sql, userId)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var ticket TicketFromDB
+		err := rows.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.CreatorId, &ticket.Status)
+		if err != nil {
+			return nil, err
+		}
+		if ticket.Description.Valid {
+			ticket.Description = ticket.Description.String
+		}
+		tickets = append(tickets, ticket)
+	}
+	return tickets, nil
 }
 
 func CreateNewTicketInDB(ticketData TicketForInsert, db *sql.DB) error {
@@ -81,11 +134,23 @@ func insertNewTicket(ticketData TicketForInsert, tx *sql.Tx) (int, error) {
 
 func GetTicketById(ticketId int, db *sql.DB) (*TicketFromDB, error) {
 
-	sql := "SELECT * FROM ticket WHERE ticket_id = ?"
-
+	sql := `
+		SELECT 
+			t.ticket_id, 
+			t.title, 
+			t.description, 
+			t.creator_id,
+			ts.status
+		FROM 
+			ticket t
+		JOIN
+			ticket_status ts ON t.ticket_id = ts.ticket_id
+		WHERE
+			t.ticket_id = ?
+	`
 	row := db.QueryRow(sql, ticketId)
 	var ticket TicketFromDB
-	err := row.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.CreatorId)
+	err := row.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.CreatorId, &ticket.Status)
 	if err != nil {
 		return nil, err
 	}

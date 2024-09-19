@@ -24,12 +24,31 @@ func GetAllOwnedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	// Respond with tickets in JSON format
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(tickets)
+	err = json.NewEncoder(w).Encode(tickets) 
 	if err != nil {
 		log.Println("Error encoding tickets:", err)
 		http.Error(w, `{"error": "Failed to encode tickets"}`, http.StatusInternalServerError)
 		return
 	}
+}
+
+func GetAssignedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+
+	// TODO: get userId from jwt
+
+	userId := 1
+
+	var tickets []TicketFromDB
+
+	tickets, err := GetAssignedTicketsFromDB(userId, db)
+
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(tickets)
 }
 
 func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
@@ -103,6 +122,7 @@ func CommentOnTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 }
 
 func AddAssigneeToTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+	log.Println("Get all tickets youre assigned to")
 	var addAssignee AddAssigneeRequest
 	err := json.NewDecoder(r.Body).Decode(&addAssignee)
 	if err != nil {
