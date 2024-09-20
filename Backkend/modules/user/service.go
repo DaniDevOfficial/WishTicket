@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"wishticket/util/hashing"
+	"wishticket/util/jwt"
 )
 
 func CreateNewUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
@@ -16,7 +17,8 @@ func CreateNewUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	if err != nil {
 		log.Println(err)
 		return
-	}
+	}  
+
 	_, err = GetUserIdByName(newUser.Username, db)
 	if err != nil && err != sql.ErrNoRows {
 		log.Println(err)
@@ -47,21 +49,28 @@ func SignIn(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		log.Println(err)
 		return
 	}
-	userData, err := 
+	userData, err := GetUserByName(credentials.Username, db)
 	//TODO: Implement Data validation, so all required data is present
-	passwordHash, err := GetUserPasswordHashByName(credentials.Username, db)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	if !hashing.CheckHashedString(passwordHash, credentials.Password) {
+	if !hashing.CheckHashedString(userData.passwordHash, credentials.Password) {
 		fmt.Fprintf(w, "Wrong username or Password")
 		return
 	}
+	jwtUserData := jwt.JWTUser{
+		Username: userData.username,
+		UserId:   userData.user_id,
+	}
+	token, err := jwt.CreateToken(jwtUserData)
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
 
-	var userData
-
-	fmt.Fprintf(w, "yayyy your logged in 😊😊😊")
+	fmt.Fprintf(w, token)
 	// TODO: Should return a JWT
 }

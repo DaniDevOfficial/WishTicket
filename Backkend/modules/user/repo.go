@@ -12,10 +12,21 @@ func GetUserIdByName(username string, db *sql.DB) (int, error) {
 	return userId, err
 }
 
-func GetUserByName(username string, db *sql.DB)(UserFromDB, error){
-	
+func GetUserByName(username string, db *sql.DB) (UserFromDB, error) {
+	sql := `SELECT 
+				username,
+				email,
+				passwordHash,
+				user_id
+			FROM
+				user
+			WHERE
+				username = ?`
+	row := db.QueryRow(sql, username)
+	var userData UserFromDB
+	err := row.Scan(&userData.username, &userData.email, &userData.passwordHash, &userData.user_id)
+	return userData, err
 }
-
 
 func GetUserPasswordHashByName(username string, db *sql.DB) (string, error) {
 	sql := "SELECT passwordHash FROM user WHERE username = ?"
@@ -40,9 +51,8 @@ func GetUserById(id int, db *sql.DB) (UserFromDB, error) {
 
 	sql := "SELECT * FROM user WHERE user_id = ?"
 	row := db.QueryRow(sql, id)
-	
+
 	var userData UserFromDB
 	err := row.Scan(&userData)
 	return userData, err
 }
-

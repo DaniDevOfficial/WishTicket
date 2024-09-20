@@ -17,11 +17,6 @@ type SimpleLoginUser struct {
 	PasswordHash string
 }
 
-type JWTUser struct {
-	Username string
-	UserId   string
-}
-
 type SignInCredentials struct {
 	Username string `json:"username"`
 	Password string `json:"password"`

@@ -6,14 +6,24 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"wishticket/util/jwt"
 )
 
 // Tasks
 
 func GetAllOwnedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
+	tokenString := r.Header.Get("auth")
+
+	if tokenString == "" {
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprint(w, "Missing authorization header")
+		return
+	}
+
 	// TODO: Get id from jwt
-	userId := 1
+	err := jwt.VerifyToken(tokenString)
+
 	tickets, err := GetAllOwnedTicketsFromDB(userId, db)
 	if err != nil {
 		fmt.Fprintf(w, "Error happened")

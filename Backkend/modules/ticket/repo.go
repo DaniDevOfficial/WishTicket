@@ -74,7 +74,7 @@ func GetAssignedTicketsFromDB(userId int, db *sql.DB) ([]TicketFromDB, error) {
 			return nil, err
 		}
 		if ticket.Description.Valid {
-			ticket.Description = ticket.Description.String
+			ticket.Description = ticket.Description
 		}
 		tickets = append(tickets, ticket)
 	}

@@ -3,14 +3,13 @@ package jwt
 import (
 	"fmt"
 	"time"
-	"wishticket/modules/user"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
 var secretKey = []byte("capybara") // TODO: add secret key via .env or some rotation
 
-func CreateToken(userData user.JWTUser) (string, error) {
+func CreateToken(userData JWTUser) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"uid":   userData.UserId,
