@@ -47,7 +47,7 @@ func SignIn(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		log.Println(err)
 		return
 	}
-
+	userData, err := 
 	//TODO: Implement Data validation, so all required data is present
 	passwordHash, err := GetUserPasswordHashByName(credentials.Username, db)
 	if err != nil {
@@ -59,6 +59,9 @@ func SignIn(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		fmt.Fprintf(w, "Wrong username or Password")
 		return
 	}
+
+	var userData
+
 	fmt.Fprintf(w, "yayyy your logged in 😊😊😊")
 	// TODO: Should return a JWT
 }

@@ -12,6 +12,16 @@ type DBNewUser struct {
 	passwordHash string
 }
 
+type SimpleLoginUser struct {
+	Username     string
+	PasswordHash string
+}
+
+type JWTUser struct {
+	Username string
+	UserId   string
+}
+
 type SignInCredentials struct {
 	Username string `json:"username"`
 	Password string `json:"password"`

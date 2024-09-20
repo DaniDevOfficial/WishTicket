@@ -12,6 +12,11 @@ func GetUserIdByName(username string, db *sql.DB) (int, error) {
 	return userId, err
 }
 
+func GetUserByName(username string, db *sql.DB)(UserFromDB, error){
+	
+}
+
+
 func GetUserPasswordHashByName(username string, db *sql.DB) (string, error) {
 	sql := "SELECT passwordHash FROM user WHERE username = ?"
 	row := db.QueryRow(sql, username)
