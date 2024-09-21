@@ -17,7 +17,7 @@ func CreateNewUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	if err != nil {
 		log.Println(err)
 		return
-	}  
+	}
 
 	_, err = GetUserIdByName(newUser.Username, db)
 	if err != nil && err != sql.ErrNoRows {
@@ -55,7 +55,7 @@ func SignIn(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		log.Println(err)
 		return
 	}
-
+	log.Println(userData.passwordHash)
 	if !hashing.CheckHashedString(userData.passwordHash, credentials.Password) {
 		fmt.Fprintf(w, "Wrong username or Password")
 		return
@@ -72,5 +72,4 @@ func SignIn(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 
 	fmt.Fprintf(w, token)
-	// TODO: Should return a JWT
 }

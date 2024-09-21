@@ -12,7 +12,7 @@ import (
 // Tasks
 
 func GetAllOwnedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
-
+	fmt.Println("Ticket call")
 	tokenString := r.Header.Get("auth")
 
 	if tokenString == "" {
@@ -24,6 +24,14 @@ func GetAllOwnedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	// TODO: Get id from jwt
 	err := jwt.VerifyToken(tokenString)
 
+	jwtData, err := jwt.DecodeBearer(tokenString)
+	log.Println(jwtData)
+	if err != nil { 
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
+	userId := jwtData.UserId
 	tickets, err := GetAllOwnedTicketsFromDB(userId, db)
 	if err != nil {
 		fmt.Fprintf(w, "Error happened")
@@ -34,7 +42,7 @@ func GetAllOwnedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	// Respond with tickets in JSON format
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(tickets) 
+	err = json.NewEncoder(w).Encode(tickets)
 	if err != nil {
 		log.Println("Error encoding tickets:", err)
 		http.Error(w, `{"error": "Failed to encode tickets"}`, http.StatusInternalServerError)

@@ -55,7 +55,7 @@ CREATE TABLE blocked_user (
 
 -- Insert sample data into 'user' table
 INSERT INTO user (username, email, passwordHash) 
-VALUES ('admin', 'bischof.david.db@gmail.com', 'admin');
+VALUES ('admin', 'bischof.david.db@gmail.com', '$2a$10$J77xTbXaoUJmo75nZRGcQupe6grmuscQzzamo5k4s9h3NRrdNFLu6'); -- password is admin
 
 -- Insert sample data into 'ticket' table
 INSERT INTO ticket (title, description, creator_id) 
