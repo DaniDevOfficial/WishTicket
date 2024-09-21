@@ -8,7 +8,7 @@ CREATE TABLE user (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    passwordHash VARCHAR(255) NOT NULL
+    password_hash VARCHAR(255) NOT NULL
 );
 
 -- Create 'ticket' table
@@ -54,7 +54,7 @@ CREATE TABLE blocked_user (
 );
 
 -- Insert sample data into 'user' table
-INSERT INTO user (username, email, passwordHash) 
+INSERT INTO user (username, email, password_hash) 
 VALUES ('admin', 'bischof.david.db@gmail.com', '$2a$10$J77xTbXaoUJmo75nZRGcQupe6grmuscQzzamo5k4s9h3NRrdNFLu6'); -- password is admin
 
 -- Insert sample data into 'ticket' table

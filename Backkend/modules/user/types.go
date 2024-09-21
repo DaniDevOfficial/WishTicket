@@ -9,7 +9,7 @@ type RequestNewUser struct {
 type DBNewUser struct {
 	username     string
 	email        string
-	passwordHash string
+	password_hash string
 }
 
 type SimpleLoginUser struct {
@@ -26,5 +26,5 @@ type UserFromDB struct {
 	user_id      int
 	username     string
 	email        string
-	passwordHash string
+	password_hash string
 }

@@ -32,13 +32,29 @@ func CreateNewUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 
 	userInDB := DBNewUser{
-		username:     newUser.Username,
-		email:        newUser.Email,
-		passwordHash: hashedPassword,
+		username:      newUser.Username,
+		email:         newUser.Email,
+		password_hash: hashedPassword,
 	}
 
 	fmt.Println(userInDB)
-	CreateUserInDB(userInDB, db)
+	id, err := CreateUserInDB(userInDB, db)
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
+	jwtUserData := jwt.JWTUser{
+		Username: userInDB.username,
+		UserId:   id,
+	}
+	jwtToken, err := jwt.CreateToken(jwtUserData)
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
+	fmt.Fprintf(w, jwtToken) // TODO: Better return handeling
 }
 
 func SignIn(w http.ResponseWriter, r *http.Request, db *sql.DB) {
@@ -55,8 +71,8 @@ func SignIn(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		log.Println(err)
 		return
 	}
-	log.Println(userData.passwordHash)
-	if !hashing.CheckHashedString(userData.passwordHash, credentials.Password) {
+	log.Println(userData.password_hash)
+	if !hashing.CheckHashedString(userData.password_hash, credentials.Password) {
 		fmt.Fprintf(w, "Wrong username or Password")
 		return
 	}

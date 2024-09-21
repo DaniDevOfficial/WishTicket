@@ -16,7 +16,7 @@ func GetUserByName(username string, db *sql.DB) (UserFromDB, error) {
 	sql := `SELECT 
 				username,
 				email,
-				passwordHash,
+				password_hash,
 				user_id
 			FROM
 				user
@@ -24,27 +24,36 @@ func GetUserByName(username string, db *sql.DB) (UserFromDB, error) {
 				username = ?`
 	row := db.QueryRow(sql, username)
 	var userData UserFromDB
-	err := row.Scan(&userData.username, &userData.email, &userData.passwordHash, &userData.user_id)
+	err := row.Scan(&userData.username, &userData.email, &userData.password_hash, &userData.user_id)
 	return userData, err
 }
 
 func GetUserPasswordHashByName(username string, db *sql.DB) (string, error) {
-	sql := "SELECT passwordHash FROM user WHERE username = ?"
+	sql := "SELECT password_hash FROM user WHERE username = ?"
 	row := db.QueryRow(sql, username)
 	var passwordHash string
 	err := row.Scan(&passwordHash)
 	return passwordHash, err
 }
 
-func CreateUserInDB(userData DBNewUser, db *sql.DB) error {
-	sql := "INSERT INTO user (username, email, passwordHash) VALUES (?, ?, ?)"
+func CreateUserInDB(userData DBNewUser, db *sql.DB) (int, error) {
+	sql := "INSERT INTO user (username, email, password_hash) VALUES (?, ?, ?)"
 	stmt, err := db.Prepare(sql)
 
 	if err != nil {
-		return err
+		return -1, err
 	}
-	_, err = stmt.Exec(userData.username, userData.email, userData.passwordHash)
-	return err
+	result, err := stmt.Exec(userData.username, userData.email, userData.password_hash)
+	if err != nil {
+		return -1, err
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return -1, err
+	}
+
+	return int(id), nil
 }
 
 func GetUserById(id int, db *sql.DB) (UserFromDB, error) {

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"wishticket/util/auth"
 	"wishticket/util/jwt"
 )
 
@@ -13,20 +14,19 @@ import (
 
 func GetAllOwnedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	fmt.Println("Ticket call")
-	tokenString := r.Header.Get("auth")
+	tokenString, err := auth.GetJWTTokenFromHeader(r)
 
-	if tokenString == "" {
+	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		fmt.Fprint(w, "Missing authorization header")
 		return
 	}
 
 	// TODO: Get id from jwt
-	err := jwt.VerifyToken(tokenString)
+	err = jwt.VerifyToken(tokenString)
 
 	jwtData, err := jwt.DecodeBearer(tokenString)
-	log.Println(jwtData)
-	if err != nil { 
+	if err != nil {
 		fmt.Fprintf(w, "Error happened")
 		log.Println(err)
 		return
@@ -53,10 +53,14 @@ func GetAllOwnedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 func GetAssignedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	// TODO: get userId from jwt
+	jwtData, err := auth.GetJWTPayloadFromHeader(r)
 
-	userId := 1
-
-	var tickets []TicketFromDB
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
+	userId := jwtData.UserId
 
 	tickets, err := GetAssignedTicketsFromDB(userId, db)
 
@@ -81,6 +85,9 @@ func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 
 	// TODO: Get user id not from header, but from jwt token
+
+
+
 
 	ticketDataInsert := TicketForInsert{
 		title:       ticketData.Title,
