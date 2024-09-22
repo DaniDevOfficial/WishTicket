@@ -1,13 +1,15 @@
-import { Router } from "./Router"
+import { Router } from "./Router";
+import { ChakraProvider } from "@chakra-ui/react";
+import { theme, toastOptions } from "./configs/chakra";
 
-
-function App() {
+export function App() {
 
   return (
     <>
-      <Router />
+      <ChakraProvider theme={theme} toastOptions={toastOptions}>
+        <Router />
+      </ChakraProvider>
     </>
   )
 }
 
-export default App

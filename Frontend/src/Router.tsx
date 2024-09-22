@@ -1,6 +1,6 @@
 import { RouterProvider, createHashRouter } from "react-router-dom";
-import { Home } from "./pages/Home";
-import { DefaultLayout } from "./layout/Default";
+import { DefaultLayout } from "./layouts/Default";
+import { HomePage } from "./pages/Home";
 
 
 
@@ -12,7 +12,7 @@ const router = createHashRouter([
     children: [
       {
         index: true, // same path as parent: "/"
-        element: <Home />
+        element: <HomePage />,
       }
     ],
   },
