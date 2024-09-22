@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"wishticket/modules/dev"
+	"wishticket/modules/ticket"
 	"wishticket/modules/user"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -27,10 +29,28 @@ func main() {
 	router := http.NewServeMux()
 
 	user.RegisterUserRoute(router, db)
+	ticket.RegisterTicketRoute(router, db)
+	dev.RegisterTicketRoute(router, db)
+
+	handler := corsMiddleware(router)
 
 	fmt.Println("Server is listening on http://localhost:8000/")
-	log.Fatal(http.ListenAndServe("localhost:8000", router))
+	log.Fatal(http.ListenAndServe("localhost:8000", handler))
 }
 
-func handleRequest() {
+// corsMiddleware sets the CORS headers to allow all origins
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+
+		// goofy ah request for checking if the server supports CORS or sum bs
+		if r.Method == http.MethodOptions {
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }
