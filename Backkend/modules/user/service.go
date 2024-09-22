@@ -19,9 +19,15 @@ func CreateNewUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	_, err = GetUserIdByName(newUser.Username, db)
+	userId, err := GetUserIdByName(newUser.Username, db)
 	if err != nil && err != sql.ErrNoRows {
 		log.Println(err)
+		return
+	}
+
+	if userId != -1 {
+		w.WriteHeader(http.StatusConflict)
+		fmt.Fprintf(w, "User already exists")
 		return
 	}
 

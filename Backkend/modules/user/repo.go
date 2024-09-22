@@ -5,10 +5,13 @@ import (
 )
 
 func GetUserIdByName(username string, db *sql.DB) (int, error) {
-	sql := "SELECT user_id FROM user WHERE username = ?"
-	row := db.QueryRow(sql, username)
+	sqlStmt := "SELECT user_id FROM user WHERE username = ?"
+	row := db.QueryRow(sqlStmt, username)
 	var userId int
 	err := row.Scan(&userId)
+	if err == sql.ErrNoRows {
+		return -1, err
+	}
 	return userId, err
 }
 
