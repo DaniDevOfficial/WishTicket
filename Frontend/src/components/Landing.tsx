@@ -17,7 +17,7 @@ export function Landing() {
                     colorScheme="primary"
                     mt={4}
                     onClick={() => {
-                        navigate('/login')
+                        navigate('/signup')
                     }}
                 >
                     Get Started
