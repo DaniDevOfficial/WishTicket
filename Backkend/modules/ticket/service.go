@@ -84,15 +84,17 @@ func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	// TODO: Get user id not from header, but from jwt token
-
-
-
+	userData, err := auth.GetJWTPayloadFromHeader(r)
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
 
 	ticketDataInsert := TicketForInsert{
 		title:       ticketData.Title,
 		description: ticketData.Description,
-		creator_id:  1,
+		creator_id:  userData.UserId,
 	}
 	err = CreateNewTicketInDB(ticketDataInsert, db)
 
@@ -116,8 +118,14 @@ func ChangeTicketStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 
 	//TODO: get userId form jwt
-	creatorId := 1
+	userData, err := auth.GetJWTPayloadFromHeader(r)
 
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
+	userId := userData.UserId
 	ticket, err := GetTicketById(newStatus.TicketId, db)
 	// TODO: Either has to be creator or Assignee
 	if err != nil {
@@ -126,7 +134,7 @@ func ChangeTicketStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	if ticket.CreatorId != creatorId {
+	if ticket.CreatorId != userId {
 		fmt.Fprintf(w, "Authorization Error")
 		log.Println("Wrong Creator id")
 		return
@@ -156,20 +164,25 @@ func AddAssigneeToTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	// later get creator id from getTicket, but for now this is fine
-	// and check it if the jwt creator id is the same as the creator id from the ticket
-	creatorId := 1
-
-	// TODO: Either has to be creator or Assignee
-	ticket, err := GetTicketById(addAssignee.TicketId, db)
-
+	userData, err := auth.GetJWTPayloadFromHeader(r)
 	if err != nil {
 		fmt.Fprintf(w, "Error happened")
 		log.Println(err)
 		return
 	}
 
-	if ticket.CreatorId != creatorId {
+	userId := userData.UserId
+
+	// TODO: Either has to be creator or Assignee
+	ticket, err := GetTicketById(addAssignee.TicketId, db)
+	
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
+
+	if ticket.CreatorId != userId {
 		fmt.Fprintf(w, "Authorization Error")
 		log.Println("Wrong Creator id")
 		return
