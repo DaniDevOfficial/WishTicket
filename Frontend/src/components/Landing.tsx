@@ -1,8 +1,30 @@
-import { Button, Flex, Heading, Text } from '@chakra-ui/react'
-import { useNavigate } from 'react-router-dom'
+import {Button, Flex, Heading, Text} from '@chakra-ui/react'
+import {useNavigate} from 'react-router-dom'
 
 export function Landing() {
     const navigate = useNavigate()
+
+    async function getTickets() {
+        try {
+            const response = await fetch('http://localhost:8000/ticket', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHAiOjE3MjcxMTU2NTksIlVzZXJJZCI6MjEsIlVzZXJOYW1lIjoiZGFuaSJ9.3JF_-1-0lEdk8dV17o78jvbiAn_BQZK3QhbhmqPBFQk'
+                },
+            })
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log('Fetched Tickets:', data);
+
+        } catch (e) {
+
+
+        }
+    }
+
     return (
         <>
             <Flex
@@ -21,6 +43,13 @@ export function Landing() {
                     }}
                 >
                     Get Started
+                </Button>
+                <Button
+                    onClick={() => {
+                        getTickets()
+                    }}
+                >
+                    GetAllTickets For user
                 </Button>
             </Flex>
         </>

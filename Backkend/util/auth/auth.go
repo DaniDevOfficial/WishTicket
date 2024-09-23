@@ -2,6 +2,7 @@ package auth
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"wishticket/util/jwt"
 )
@@ -26,6 +27,7 @@ func GetJWTTokenFromHeader(r *http.Request) (string, error) {
 //	(jwt.JWTPayload, error): Returns the decoded JWT payload if successful, otherwise returns an error.
 func GetJWTPayloadFromHeader(r *http.Request) (jwt.JWTPayload, error) {
 	jwtToken, err := GetJWTTokenFromHeader(r)
+	log.Print(jwtToken)
 	var jwtData jwt.JWTPayload
 	if err != nil {
 		return jwtData, err

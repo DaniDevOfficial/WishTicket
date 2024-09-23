@@ -13,31 +13,38 @@ import (
 // Tasks
 
 func GetAllOwnedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
-	fmt.Println("Ticket call")
 	tokenString, err := auth.GetJWTTokenFromHeader(r)
-
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		fmt.Fprint(w, "Missing authorization header")
+		log.Println("Authorization header missing or invalid:", err)
 		return
 	}
 
-	// TODO: Get id from jwt
 	err = jwt.VerifyToken(tokenString)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprint(w, "Invalid JWT token")
+		log.Println("JWT verification failed:", err)
+		return
+	}
 
 	jwtData, err := jwt.DecodeBearer(tokenString)
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		log.Println("Error decoding JWT:", err)
+		http.Error(w, `{"error": "Failed to decode token"}`, http.StatusInternalServerError)
 		return
 	}
+	log.Printf("Decoded JWT successfully, User ID: %d\n", jwtData.UserId)
+
 	userId := jwtData.UserId
 	tickets, err := GetAllOwnedTicketsFromDB(userId, db)
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		log.Printf("Error fetching tickets for user %d: %v", userId, err)
+		http.Error(w, `{"error": "Failed to retrieve tickets"}`, http.StatusInternalServerError)
 		return
 	}
+
 	log.Printf("User %d has %d tickets\n", userId, len(tickets))
 
 	// Respond with tickets in JSON format
@@ -48,6 +55,8 @@ func GetAllOwnedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		http.Error(w, `{"error": "Failed to encode tickets"}`, http.StatusInternalServerError)
 		return
 	}
+
+	log.Println("Successfully responded with tickets.")
 }
 
 func GetAssignedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
@@ -90,7 +99,7 @@ func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		log.Println(err)
 		return
 	}
-
+	log.Print(userData)
 	ticketDataInsert := TicketForInsert{
 		title:       ticketData.Title,
 		description: ticketData.Description,
@@ -103,6 +112,7 @@ func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		log.Println(err)
 		return
 	}
+	fmt.Fprintf(w, "yayyyy")
 }
 
 func ChangeTicketStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
@@ -175,7 +185,7 @@ func AddAssigneeToTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	// TODO: Either has to be creator or Assignee
 	ticket, err := GetTicketById(addAssignee.TicketId, db)
-	
+
 	if err != nil {
 		fmt.Fprintf(w, "Error happened")
 		log.Println(err)

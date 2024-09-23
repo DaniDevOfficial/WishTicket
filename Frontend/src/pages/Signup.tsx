@@ -1,6 +1,18 @@
-import { Container, FormControl, FormLabel, Icon, Input, InputGroup, InputRightElement, Stack } from '@chakra-ui/react'
+import {
+    Container,
+    FormControl,
+    FormLabel,
+    Icon,
+    Input,
+    InputGroup,
+    InputRightElement,
+    Stack
+} from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
+import {createNewUser} from "../repo/user/UserRepository.ts";
+import {NewUser} from "../types/user.ts";
+import {addToLocalStorage} from "../utility/localStorage.ts";
 
 export function Signup() {
     const [showPassword, setShowPassword] = useState(false)
@@ -32,16 +44,18 @@ export function Signup() {
             alert('Passwords do not match.');
             return;
         }
+        const newUser: NewUser = {
+            username: username,
+            email: email,
+            password: password
+        }
+        try {
+        const res = await createNewUser(newUser)
+        const token = res?.token
+        addToLocalStorage('auth', token)
+        } catch (e) {
 
-        const res = await fetch('http://localhost:8000/users', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        })
-        console.log(res);
-        
+        }
     }
 
     return (
