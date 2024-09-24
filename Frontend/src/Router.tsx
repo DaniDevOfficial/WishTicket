@@ -3,6 +3,7 @@ import { DefaultLayout } from "./layouts/Default";
 import { HomePage } from "./pages/Home";
 import { Signup } from "./pages/Signup";
 import {SignIn} from "./pages/SignIn.tsx";
+import {User} from "./pages/User.tsx";
 
 
 
@@ -23,6 +24,10 @@ const router = createHashRouter([
       {
         path: "/signIn",
         element: <SignIn />,
+      },
+      {
+        path: "/user/:userName",
+        element: <User />,
       }
     ],
   },

@@ -1,9 +1,10 @@
 import {NewUser, SignInCredentials} from "../../types/user.ts";
 import {JwtResponse} from "../../types/responses/user.ts";
+import {UserData} from "../../types/props/user.ts";
 
 const DB_URL = import.meta.env.VITE_BACKEND_URL
 
-export async function createNewUser(newUser: NewUser): Promise<JwtResponse | undefined>{
+export async function createNewUser(newUser: NewUser): Promise<JwtResponse | undefined> {
     try {
         const res = await fetch(DB_URL + 'users', {
             method: 'POST',
@@ -22,8 +23,7 @@ export async function createNewUser(newUser: NewUser): Promise<JwtResponse | und
     }
 }
 
-
-export async function signIn(singInCredentials: SignInCredentials): Promise<JwtResponse | undefined>{
+export async function signIn(singInCredentials: SignInCredentials): Promise<JwtResponse | undefined> {
     try {
         const res = await fetch(DB_URL + 'users/login', {
             method: 'POST',
@@ -40,4 +40,8 @@ export async function signIn(singInCredentials: SignInCredentials): Promise<JwtR
     } catch (e) {
         console.log(e)
     }
+}
+
+export async function getUserDataByName(userName: string): Promise<UserData | undefined> {
+
 }
