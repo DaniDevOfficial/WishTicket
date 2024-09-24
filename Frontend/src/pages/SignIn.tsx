@@ -12,20 +12,18 @@ import {
 } from '@chakra-ui/react'
 import React, {useState} from 'react'
 import {FaEye, FaEyeSlash} from 'react-icons/fa'
-import {createNewUser} from "../repo/user/UserRepository.ts";
-import {NewUser} from "../types/user.ts";
+import {signIn} from "../repo/user/UserRepository.ts";
+import {SignInCredentials} from "../types/user.ts";
 import {addToLocalStorage} from "../utility/localStorage.ts";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
-export function Signup() {
+export function SignIn() {
     const [showPassword, setShowPassword] = useState(false)
     const [formData, setFormData] = useState({
-        username: '',
-        email: 'email@email.com',
-        password: '',
-        confirmPassword: ''
+        username: 'dani',
+        password: 'dani',
     })
-
+    const navigate = useNavigate()
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const {name, value} = e.target
         setFormData(prevState => ({
@@ -37,25 +35,22 @@ export function Signup() {
     async function submitForm(e: React.FormEvent) {
         e.preventDefault()
 
-        const {username, email, password, confirmPassword} = formData;
-        if (!username || !email || !password || !confirmPassword) {
+        const {username, password} = formData;
+        if (!username || !password) {
             alert('All fields are required.');
             return;
         }
 
-        if (password !== confirmPassword) {
-            alert('Passwords do not match.');
-            return;
-        }
-        const newUser: NewUser = {
+
+        const signInCredentials: SignInCredentials = {
             username: username,
-            email: email,
             password: password
         }
         try {
-            const res = await createNewUser(newUser)
+            const res = await signIn(signInCredentials)
             const token = res?.token
             addToLocalStorage('auth', token)
+            navigate("/user/" + username)
         } catch (e) {
 
         }
@@ -87,19 +82,7 @@ export function Signup() {
                             onChange={handleChange}
                         />
                     </FormControl>
-                    <FormControl>
-                        <FormLabel>Email</FormLabel>
-                        <Input
-                            required
-                            focusBorderColor='primary.base'
 
-                            type="email"
-                            name="email"
-                            placeholder='Email'
-                            value={formData.email}
-                            onChange={handleChange}
-                        />
-                    </FormControl>
                     <FormControl>
                         <FormLabel>Password</FormLabel>
                         <InputGroup>
@@ -123,27 +106,6 @@ export function Signup() {
                         </InputGroup>
                     </FormControl>
                     <FormControl>
-                        <FormLabel>Confirm Password</FormLabel>
-                        <InputGroup>
-                            <Input
-                                required
-                                focusBorderColor='primary.base'
-                                type={showPassword ? "text" : "password"}
-                                name="confirmPassword"
-                                placeholder='Confirm Password'
-                                value={formData.confirmPassword}
-                                onChange={handleChange}
-                            />
-                            <InputRightElement>
-                                <Icon
-                                    as={showPassword ? FaEyeSlash : FaEye}
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    _hover={{cursor: 'pointer'}}
-                                />
-                            </InputRightElement>
-                        </InputGroup>
-                    </FormControl>
-                    <FormControl>
                         <Input type="submit" value="Submit" _hover={{cursor: 'pointer', bg: 'background.700'}}/>
                     </FormControl>
                 </Stack>
@@ -151,7 +113,7 @@ export function Signup() {
             <Text
                 fontSize={"xs"}
             >
-                Or <Link to={"/signIn"}>Sign In</Link>
+                Or <Link to={"/signUp"}>Create An account</Link>
             </Text>
         </Container>
     )

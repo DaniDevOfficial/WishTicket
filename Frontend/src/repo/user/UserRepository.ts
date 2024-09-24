@@ -1,9 +1,9 @@
-import {NewUser} from "../../types/user.ts";
-import {CreateUserResponse} from "../../types/responses/user.ts";
+import {NewUser, SignInCredentials} from "../../types/user.ts";
+import {JwtResponse} from "../../types/responses/user.ts";
 
 const DB_URL = import.meta.env.VITE_BACKEND_URL
 
-export async function createNewUser(newUser: NewUser): Promise<CreateUserResponse | undefined>{
+export async function createNewUser(newUser: NewUser): Promise<JwtResponse | undefined>{
     try {
         const res = await fetch(DB_URL + 'users', {
             method: 'POST',
@@ -11,6 +11,26 @@ export async function createNewUser(newUser: NewUser): Promise<CreateUserRespons
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(newUser)
+        })
+        if (!res.ok) {
+            const errorBody = await res.text();
+            throw new Error(`Account Creation Error: ${errorBody || res.statusText}`);
+        }
+        return await res.json()
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+
+export async function signIn(singInCredentials: SignInCredentials): Promise<JwtResponse | undefined>{
+    try {
+        const res = await fetch(DB_URL + 'users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(singInCredentials)
         })
         if (!res.ok) {
             const errorBody = await res.text();

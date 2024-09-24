@@ -1,6 +1,6 @@
 
 
 
-export type CreateUserResponse = {
+export type JwtResponse = {
     token: string
 }
