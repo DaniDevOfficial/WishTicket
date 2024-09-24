@@ -12,6 +12,7 @@ func GetAllOwnedTicketsFromDB(userId int, db *sql.DB) ([]TicketFromDB, error) {
 			t.ticket_id, 
 			t.title, 
 			t.description, 
+			t.visibility,
 			t.creator_id,
 			ts.status
 		FROM 
@@ -30,7 +31,7 @@ func GetAllOwnedTicketsFromDB(userId int, db *sql.DB) ([]TicketFromDB, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var ticket TicketFromDB
-		err := rows.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.CreatorId, &ticket.Status)
+		err := rows.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.Visibility, &ticket.CreatorId, &ticket.Status)
 		if err != nil {
 			return nil, err
 		}
@@ -48,6 +49,7 @@ func GetAssignedTicketsFromDB(userId int, db *sql.DB) ([]TicketFromDB, error) {
 			t.ticket_id,
 			t.title,
 			t.description,
+			t.visibility
 			t.creator_id,
 			ts.status
 		FROM
@@ -69,7 +71,7 @@ func GetAssignedTicketsFromDB(userId int, db *sql.DB) ([]TicketFromDB, error) {
 
 	for rows.Next() {
 		var ticket TicketFromDB
-		err := rows.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.CreatorId, &ticket.Status)
+		err := rows.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.Visibility, &ticket.CreatorId, &ticket.Status)
 		if err != nil {
 			return nil, err
 		}
@@ -110,14 +112,14 @@ func CreateNewTicketInDB(ticketData TicketForInsert, db *sql.DB) error {
 }
 
 func insertNewTicket(ticketData TicketForInsert, tx *sql.Tx) (int, error) {
-	sql := "INSERT INTO ticket (title, description, creator_id) VALUES (?, ?, ?)"
-	stmt, err := tx.Prepare(sql)
+	sqlString := "INSERT INTO ticket (title, description, visibility, creator_id) VALUES (?, ?, ?)"
+	stmt, err := tx.Prepare(sqlString)
 
 	if err != nil {
 		return -1, err
 	}
 	defer stmt.Close()
-	res, err := stmt.Exec(ticketData.title, ticketData.description, ticketData.creator_id)
+	res, err := stmt.Exec(ticketData.title, ticketData.description, ticketData.visibility, ticketData.creator_id)
 
 	if err != nil {
 		return -1, err
@@ -138,10 +140,11 @@ func GetTicketById(ticketId int, db *sql.DB) (*TicketFromDB, error) {
 		SELECT 
 			t.ticket_id, 
 			t.title, 
-			t.description, 
+			t.description,
+			t.visibility,
 			t.creator_id,
 			ts.status
-		FROM 
+		FROM
 			ticket t
 		JOIN
 			ticket_status ts ON t.ticket_id = ts.ticket_id
@@ -150,7 +153,7 @@ func GetTicketById(ticketId int, db *sql.DB) (*TicketFromDB, error) {
 	`
 	row := db.QueryRow(sql, ticketId)
 	var ticket TicketFromDB
-	err := row.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.CreatorId, &ticket.Status)
+	err := row.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.Visibility, &ticket.CreatorId, &ticket.Status)
 	if err != nil {
 		return nil, err
 	}
