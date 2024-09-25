@@ -100,5 +100,8 @@ func SignIn(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	fmt.Fprintf(w, token)
+	err = json.NewEncoder(w).Encode(map[string]string{"token": token})
+	if err != nil {
+		return
+	}
 }

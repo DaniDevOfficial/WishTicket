@@ -26,7 +26,7 @@ const router = createHashRouter([
         element: <SignIn />,
       },
       {
-        path: "/user/:userName",
+        path: "/user/:username",
         element: <User />,
       }
     ],

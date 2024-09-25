@@ -1,10 +1,10 @@
-import {Container, Image, Text} from "@chakra-ui/react";
+import {Container, Heading, Image} from "@chakra-ui/react";
 import {UserData} from "../../types/props/user.ts";
 
 export function UserProfileCard({userData}: { userData: UserData }) {
     console.log(userData)
     return (
-        <Container maxW={"296px"} textAlign={"left"}>
+        <Container maxW={"200px"} textAlign={"center"}>
 
             <Image
                 borderRadius={"50%"}
@@ -12,9 +12,9 @@ export function UserProfileCard({userData}: { userData: UserData }) {
                 outlineColor={"primary.base"}
                 src={userData.profilePicture}
             />
-            <Text>
+            <Heading>
                 {userData.username}
-            </Text>
+            </Heading>
         </Container>
     )
 }
