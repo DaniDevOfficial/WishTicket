@@ -49,7 +49,7 @@ func GetAssignedTicketsFromDB(userId int, db *sql.DB) ([]TicketFromDB, error) {
 			t.ticket_id,
 			t.title,
 			t.description,
-			t.visibility
+			t.visibility,
 			t.creator_id,
 			ts.status
 		FROM
@@ -63,10 +63,10 @@ func GetAssignedTicketsFromDB(userId int, db *sql.DB) ([]TicketFromDB, error) {
 	`
 	var tickets []TicketFromDB
 	rows, err := db.Query(sql, userId)
-
 	if err != nil {
 		return nil, err
 	}
+
 	defer rows.Close()
 
 	for rows.Next() {

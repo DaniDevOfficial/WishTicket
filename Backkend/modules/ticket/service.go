@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"wishticket/modules/user"
 	"wishticket/util/auth"
 	"wishticket/util/jwt"
 )
@@ -90,15 +91,34 @@ func GetAllAssignedAndOwnedTicketsForUser(w http.ResponseWriter, r *http.Request
 		log.Println(err)
 		return
 	}
-
-	userData, err := auth.GetJWTPayloadFromHeader(r)
+	userId, err := user.GetUserIdByName(username.Username, db)
 
 	if err != nil {
-		userId := -1
-	} else {
-		userId := userData.UserId
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
 	}
 
+	requesterData, err := auth.GetJWTPayloadFromHeader(r)
+	requesterId := -1
+	if err == nil {
+		requesterId = requesterData.UserId
+	}
+	log.Println(requesterId)
+	// ownedTickets, err := GetAllOwnedTicketsFromDB(userId, db)
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
+
+	assignedTickets, err := GetAssignedTicketsFromDB(userId, db)
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
+	log.Println(assignedTickets)
 }
 
 func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
