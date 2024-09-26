@@ -82,6 +82,25 @@ func GetAssignedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	json.NewEncoder(w).Encode(tickets)
 }
 
+func GetAllAssignedAndOwnedTicketsForUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+	var username UsernameRequest
+	err := json.NewDecoder(r.Body).Decode(&username)
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
+
+	userData, err := auth.GetJWTPayloadFromHeader(r)
+
+	if err != nil {
+		userId := -1
+	} else {
+		userId := userData.UserId
+	}
+
+}
+
 func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	// TODO: some auth before letting Creation happen but idk how to do this currenty
 

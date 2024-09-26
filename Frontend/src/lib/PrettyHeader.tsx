@@ -1,4 +1,4 @@
-import {Box, Heading, Text} from "@chakra-ui/react";
+import {Box, Text} from "@chakra-ui/react";
 
 export function PrettyHeader({ name, isOpen }: { name: string, isOpen: boolean}) {
     return (

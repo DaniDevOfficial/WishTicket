@@ -22,6 +22,10 @@ type TicketRequest struct {
 	Visibility  string `json:"visibility"`
 }
 
+type UsernameRequest struct {
+	Username string `json:"username"`
+}
+
 type StatusRequest struct {
 	TicketId int    `json:"ticketId"`
 	Status   string `json:"status"`
