@@ -48,7 +48,7 @@ func GetAllOwnedTicketsFromDB(userId int, db *sql.DB, onlyPublic bool) ([]Ticket
 
 }
 
-func GetAssignedTicketsFromDB(userId int, db *sql.DB) ([]TicketFromDB, error) {
+func GetAssignedTicketsFromDB(userId int, db *sql.DB, onlyPublic bool) ([]TicketFromDB, error) {
 
 	sql := `
 		SELECT DISTINCT
@@ -67,6 +67,12 @@ func GetAssignedTicketsFromDB(userId int, db *sql.DB) ([]TicketFromDB, error) {
 		WHERE
 			ta.assigned_id = ?
 	`
+	if onlyPublic {
+		sql += `
+			AND 
+				t.visibility = 'PUBLIC'
+	`
+	}
 	var tickets []TicketFromDB
 	rows, err := db.Query(sql, userId)
 	if err != nil {
