@@ -2,7 +2,7 @@ import {Container, Heading, Image} from "@chakra-ui/react";
 import {UserData} from "../../types/props/user.ts";
 
 export function UserProfileCard({userData}: { userData: UserData }) {
-    console.log(userData)
+
     return (
         <Container maxW={"200px"} textAlign={"center"}>
 

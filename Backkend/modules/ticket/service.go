@@ -77,10 +77,11 @@ func GetAssignedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 func GetAllAssignedAndOwnedTicketsForUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	jwtData, _ := auth.GetJWTPayloadFromHeader(r) // TODO: do some error handeling here
-
+	log.Println("Get all Assigned and owned Tickets for user ")
+	log.Println(jwtData)
 	ownerUsername := r.URL.Query().Get("username")
 	userId, err := user.GetUserIdByName(ownerUsername, db)
-
+	log.Println(ownerUsername)
 	if err != nil {
 		log.Printf("Error fetching tickets for user %d: %v", userId, err)
 		http.Error(w, `{"error": "Failed to retrieve tickets"}`, http.StatusInternalServerError)

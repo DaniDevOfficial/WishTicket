@@ -4,6 +4,7 @@ import {UserData} from "../types/props/user.ts";
 import {UserTickets} from "../components/user/UserTickets.tsx";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
+import {getAssignedAndOwnedTicketsByUsername} from "../repo/ticket/TicketRepository.ts";
 
 export function User() {
     const params = useParams();
@@ -11,17 +12,23 @@ export function User() {
 
     useEffect(() => {
         setUsername(params.username ?? "")
-
+    }, [params])
+    useEffect(() => {
+        getTickets()
         async function getTickets() {
-            try {
-                const data = getTicketsForUser()
 
+            try {
+                if (username.trim() == ''){
+                    throw Error("no username Provided")
+                }
+                console.log("username: " + username)
+                const data = await getAssignedAndOwnedTicketsByUsername(username)
+                console.log(data)
             } catch (e) {
 
             }
         }
-    }, [params])
-
+    }, [username]);
 
     const userData: UserData = {
         username: username,

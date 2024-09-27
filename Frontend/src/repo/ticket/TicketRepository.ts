@@ -1,22 +1,25 @@
+import {getValueFromLocalStorage} from "../../utility/localStorage.ts";
 
 const DB_URL = import.meta.env.VITE_BACKEND_URL
 
 export async function getAssignedAndOwnedTicketsByUsername(username: string) {
-    const req = {
-        username: username
+    if (username.trim() == ''){
+        return;
     }
     try {
-        const res = await fetch(DB_URL + 'ticket', {
+        const jwtToken = getValueFromLocalStorage('auth')
+        const res = await fetch(DB_URL + 'ticket/all?username=' + username, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': jwtToken
             },
-            body: JSON.stringify(req)
         })
         if (!res.ok) {
             const errorBody = await res.text();
             throw new Error(`Account Creation Error: ${errorBody || res.statusText}`);
         }
+        console.log(res)
         return await res.json()
     } catch (e) {
         console.log(e)
