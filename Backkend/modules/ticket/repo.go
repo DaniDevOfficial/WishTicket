@@ -6,7 +6,7 @@ import (
 
 // Ticket
 
-func GetAllOwnedTicketsFromDB(userId int, db *sql.DB) ([]TicketFromDB, error) {
+func GetAllOwnedTicketsFromDB(userId int, db *sql.DB, onlyPublic bool) ([]TicketFromDB, error) {
 	sql := `
 		SELECT 
 			t.ticket_id, 
@@ -22,6 +22,12 @@ func GetAllOwnedTicketsFromDB(userId int, db *sql.DB) ([]TicketFromDB, error) {
 		WHERE
 			t.creator_id = ?
 	`
+	if onlyPublic {
+		sql += `
+			AND 
+				t.visibility = 'PUBLIC'
+	`
+	}
 	var tickets []TicketFromDB
 	rows, err := db.Query(sql, userId)
 
@@ -94,7 +100,6 @@ func CreateNewTicketInDB(ticketData TicketForInsert, db *sql.DB) error {
 	}()
 
 	lastId, err := insertNewTicket(ticketData, tx)
-
 	if err != nil {
 		return err
 	}
@@ -112,9 +117,8 @@ func CreateNewTicketInDB(ticketData TicketForInsert, db *sql.DB) error {
 }
 
 func insertNewTicket(ticketData TicketForInsert, tx *sql.Tx) (int, error) {
-	sqlString := "INSERT INTO ticket (title, description, visibility, creator_id) VALUES (?, ?, ?)"
+	sqlString := "INSERT INTO ticket (title, description, visibility, creator_id) VALUES (?, ?, ?, ?)"
 	stmt, err := tx.Prepare(sqlString)
-
 	if err != nil {
 		return -1, err
 	}

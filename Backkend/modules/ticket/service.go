@@ -39,7 +39,7 @@ func GetAllOwnedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	log.Printf("Decoded JWT successfully, User ID: %d\n", jwtData.UserId)
 
 	userId := jwtData.UserId
-	tickets, err := GetAllOwnedTicketsFromDB(userId, db)
+	tickets, err := GetAllOwnedTicketsFromDB(userId, db, true)
 	if err != nil {
 		log.Printf("Error fetching tickets for user %d: %v", userId, err)
 		http.Error(w, `{"error": "Failed to retrieve tickets"}`, http.StatusInternalServerError)
@@ -138,10 +138,16 @@ func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		log.Println(err)
 		return
 	}
-	log.Print(userData)
+	_, err = user.GetUserById(userData.UserId, db)
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
 	ticketDataInsert := TicketForInsert{
 		title:       ticketData.Title,
 		description: ticketData.Description,
+		visibility:  ticketData.Visibility,
 		creator_id:  userData.UserId,
 	}
 	err = CreateNewTicketInDB(ticketDataInsert, db)
