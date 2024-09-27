@@ -42,6 +42,3 @@ export async function signIn(singInCredentials: SignInCredentials): Promise<JwtR
     }
 }
 
-export async function getUserDataByName(userName: string): Promise<UserData | undefined> {
-
-}
