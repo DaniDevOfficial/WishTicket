@@ -111,11 +111,11 @@ func GetAllAssignedAndOwnedTicketsForUser(w http.ResponseWriter, r *http.Request
 	log.Println("ownedTickets: ")
 	log.Print(ownedTickets)
 	response := struct {
-		AssignedTickets interface{} `json:"assignedTickets"`
-		OwnedTickets    interface{} `json:"ownedTickets"`
+		Assigned interface{} `json:"assigned"`
+		Owned    interface{} `json:"owned"`
 	}{
-		AssignedTickets: assignedTickets,
-		OwnedTickets:    ownedTickets,
+		Assigned: assignedTickets,
+		Owned:    ownedTickets,
 	}
 	jsonResponse, err := json.Marshal(response)
 	if err != nil {

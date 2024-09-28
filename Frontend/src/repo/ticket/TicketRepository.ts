@@ -1,13 +1,15 @@
 import {getValueFromLocalStorage} from "../../utility/localStorage.ts";
+import {AssignedAndOwned} from "../../types/props/ticket.ts";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 const DB_URL = import.meta.env.VITE_BACKEND_URL
 
-export async function getAssignedAndOwnedTicketsByUsername(username: string) {
+export async function getAssignedAndOwnedTicketsByUsername(username: string): Promise<AssignedAndOwned> {
     if (username.trim() == ''){
-        return;
+        throw new Error("no username")
     }
+
     try {
         const jwtToken = getValueFromLocalStorage('auth')
         const res = await fetch(DB_URL + 'ticket/all?username=' + username, {
@@ -19,11 +21,11 @@ export async function getAssignedAndOwnedTicketsByUsername(username: string) {
         })
         if (!res.ok) {
             const errorBody = await res.text();
-            throw new Error(`Account Creation Error: ${errorBody || res.statusText}`);
+            throw new Error(`error: ${errorBody || res.statusText}`);
         }
         console.log(res)
         return await res.json()
     } catch (e) {
-        console.log(e)
+        throw new Error("Error while getting tickets")
     }
 }

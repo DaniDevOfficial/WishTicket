@@ -10,6 +10,7 @@ const OWNED = "OWNED"
 
 export function UserTickets({ticketsData}: { ticketsData: AssignedAndOwned }) {
     const [currentlySelected, setCurrentlySelected] = useState(ASSIGNED)
+    console.log(ticketsData)
     return (
         <Flex justifyContent={"center"} alignItems={"center"} flexDir={"column"}>
             <Flex w={"300px"} justifyContent={"space-between"}>
@@ -24,23 +25,35 @@ export function UserTickets({ticketsData}: { ticketsData: AssignedAndOwned }) {
                     <PrettyHeader name={"Owned Tickets"} isOpen={currentlySelected === OWNED}/>
                 </Box>
             </Flex>
+
             {currentlySelected === ASSIGNED ? (
                 <Box width={"300px"}>
-                    {ticketsData["assigned"].map((ticket) => {
-                        return (
-                            <TicketCard ticketData={ticket}/>
-                        )
-                    })}
+                    {ticketsData["assigned"] && ticketsData["assigned"].length > 0 ? (
+                        ticketsData["assigned"].map((ticket, index) => (
+                            <TicketCard
+                                ticketData={ticket}
+                                key={ticket.ticketId || `assigned-ticket-${index}`}
+                            />
+                        ))
+                    ) : (
+                        <p>No assigned tickets available</p>
+                    )}
                 </Box>
             ) : (
                 <Box width={"300px"}>
-                    {ticketsData["owned"].map((ticket) => {
-                        return (
-                            <TicketCard ticketData={ticket}/>
-                        )
-                    })}
+                    {ticketsData["owned"] && ticketsData["owned"].length > 0 ? (
+                        ticketsData["owned"].map((ticket, index) => (
+                            <TicketCard
+                                ticketData={ticket}
+                                key={ticket.ticketId || `owned-ticket-${index}`}
+                            />
+                        ))
+                    ) : (
+                        <p>No owned tickets available</p>
+                    )}
                 </Box>
             )}
+
         </Flex>
     )
 }

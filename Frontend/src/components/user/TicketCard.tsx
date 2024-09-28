@@ -7,7 +7,7 @@ import {Link} from "react-router-dom";
 export function TicketCard({ticketData}: { ticketData: TicketData }) {
 
     return (
-        <Link to={"/ticket/" + ticketData.ticket_id}>
+        <Link to={"/ticket/" + ticketData.ticketId}>
             <Box
                 padding={"10px"}
                 marginY={"10px"}
@@ -28,7 +28,7 @@ export function TicketCard({ticketData}: { ticketData: TicketData }) {
                 <Text
                     color={"gray"}
                 >
-                    {truncation(ticketData.description, 50, "...")}
+                    {truncation(ticketData.description.String, 50, "...")}
                 </Text>
             </Box>
         </Link>

@@ -1,10 +1,13 @@
 
 export interface TicketData {
     title: string,
-    description: string,
+    description: {
+        String: string,
+        Valid: boolean
+    },
     visibility: string,
     status: string,
-    ticket_id: number
+    ticketId: number
 }
 
 export interface AssignedAndOwned {
