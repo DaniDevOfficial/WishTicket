@@ -13,12 +13,12 @@ export function UserTickets({ticketsData}: { ticketsData: AssignedAndOwned }) {
     return (
         <Flex justifyContent={"center"} alignItems={"center"} flexDir={"column"}>
             <Flex w={"300px"} justifyContent={"space-between"}>
-                <Box onClick={() => {
+                <Box cursor={"pointer"} onClick={() => {
                     setCurrentlySelected(ASSIGNED)
                 }}>
                     <PrettyHeader name={"Assigned Tickets"} isOpen={currentlySelected === ASSIGNED}/>
                 </Box>
-                <Box onClick={() => {
+                <Box cursor={"pointer"} onClick={() => {
                     setCurrentlySelected(OWNED)
                 }}>
                     <PrettyHeader name={"Owned Tickets"} isOpen={currentlySelected === OWNED}/>

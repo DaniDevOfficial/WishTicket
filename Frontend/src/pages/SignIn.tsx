@@ -8,7 +8,7 @@ import {
     InputGroup,
     InputRightElement,
     Stack,
-    Text
+    Text, useToast
 } from '@chakra-ui/react'
 import React, {useState} from 'react'
 import {FaEye, FaEyeSlash} from 'react-icons/fa'
@@ -24,6 +24,9 @@ export function SignIn() {
         password: 'dani',
     })
     const navigate = useNavigate()
+    const toast = useToast()
+
+
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const {name, value} = e.target
         setFormData(prevState => ({
@@ -54,7 +57,12 @@ export function SignIn() {
             console.log(localStorage)
             navigate("/user/" + username)
         } catch (e) {
-
+            toast({
+                title: 'Sign In error.',
+                description: "whopsie 🤭🤭",
+                status: 'error',
+                isClosable: true,
+            })
         }
     }
 

@@ -1,5 +1,7 @@
 import {getValueFromLocalStorage} from "../../utility/localStorage.ts";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 const DB_URL = import.meta.env.VITE_BACKEND_URL
 
 export async function getAssignedAndOwnedTicketsByUsername(username: string) {

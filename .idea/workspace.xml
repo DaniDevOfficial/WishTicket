@@ -4,26 +4,22 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="67a0bbfa-e625-41c5-bd99-575c2813e9e6" name="Changes" comment="stash">
-      <change afterPath="$PROJECT_DIR$/Frontend/src/components/ui/PillTag.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/components/user/UserTickets.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/user/UserTickets.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/pages/User.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/pages/User.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/types/props/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/types/props/user.ts" afterDir="false" />
+    <list default="true" id="a4fb9e02-e56d-4ca3-93b7-a23f949eed63" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/WishTicket.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/WishTicket.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/configs/chakra.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/configs/chakra.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/pages/SignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/pages/SignIn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/pages/Signup.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/pages/Signup.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/repo/ticket/TicketRepository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/repo/ticket/TicketRepository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/repo/user/UserRepository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/repo/user/UserRepository.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="TypeScript JSX File" />
-        <option value="TypeScript File" />
-      </list>
-    </option>
-  </component>
-  <component name="GOROOT" url="file://$PROJECT_DIR$/../../../Program Files/Go" />
+  <component name="GOROOT" url="file://$PROJECT_DIR$/../../Program Files/Go" />
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
@@ -31,7 +27,6 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory"><![CDATA[{
   "lastFilter": {
@@ -42,13 +37,14 @@
   <component name="GithubPullRequestsUISettings"><![CDATA[{
   "selectedUrlAndAccountId": {
     "url": "https://github.com/DaniDevOfficial/WishTicket.git",
-    "accountId": "85d2713b-8ec5-4680-8d77-953a0fccb516"
+    "accountId": "277bcdf2-9085-4a73-8b9b-be0bfd2102e6"
   }
 }]]></component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 6
-}</component>
-  <component name="ProjectId" id="2mh33dFUEhrEsT5TcdfNj0uDLe0" />
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 6
+}]]></component>
+  <component name="ProjectId" id="2miJo69vFm8kxTv5FJkkOzJ8Mlx" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -62,40 +58,24 @@
     "git-widget-placeholder": "2-simple-account-page",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "C:/Schule/Projekte/WishTicket",
+    "last_opened_file_path": "C:/Users/morec",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "C:\\Schule\\Projekte\\WishTicket\\Frontend\\node_modules\\typescript\\lib"
+    "ts.external.directory.path": "C:\\Projekte\\WishTicket\\Frontend\\node_modules\\typescript\\lib"
   }
 }]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-gosdk-5df93f7ad4aa-df9ad98b711f-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-242.23339.24" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-GO-242.23339.24" />
+        <option value="bundled-gosdk-5df93f7ad4aa-df9ad98b711f-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-242.21829.220" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-GO-242.21829.220" />
       </set>
     </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="stash" />
-    <option name="LAST_COMMIT_MESSAGE" value="stash" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

@@ -8,7 +8,8 @@ import {
     InputGroup,
     InputRightElement,
     Stack,
-    Text
+    Text,
+    useToast
 } from '@chakra-ui/react'
 import React, {useState} from 'react'
 import {FaEye, FaEyeSlash} from 'react-icons/fa'
@@ -16,6 +17,7 @@ import {createNewUser} from "../repo/user/UserRepository.ts";
 import {NewUser} from "../types/user.ts";
 import {addToLocalStorage} from "../utility/localStorage.ts";
 import {Link} from "react-router-dom";
+
 
 export function Signup() {
     const [showPassword, setShowPassword] = useState(false)
@@ -25,6 +27,7 @@ export function Signup() {
         password: '',
         confirmPassword: ''
     })
+    const toast = useToast()
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const {name, value} = e.target
@@ -57,7 +60,12 @@ export function Signup() {
             const token = res?.token
             addToLocalStorage('auth', token)
         } catch (e) {
-
+            toast({
+                title: 'Signup error.',
+                description: "whopsie 🤭🤭",
+                status: 'error',
+                isClosable: true,
+            })
         }
     }
 
