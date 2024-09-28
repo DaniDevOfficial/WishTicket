@@ -25,7 +25,6 @@ func initDB() {
 func main() {
 
 	initDB()
-
 	router := http.NewServeMux()
 
 	user.RegisterUserRoute(router, db)
@@ -45,12 +44,13 @@ func corsMiddleware(next http.Handler) http.Handler {
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
-
 		// goofy ah request for checking if the server supports CORS or sum bs
-		if r.Method == http.MethodOptions {
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
 			return
 		}
-
+		log.Println(r.Method)
+		log.Println(r.Method)
 		next.ServeHTTP(w, r)
 	})
 }

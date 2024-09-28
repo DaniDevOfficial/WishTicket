@@ -2,6 +2,7 @@ package user
 
 import (
 	"database/sql"
+	"log"
 	"net/http"
 )
 
@@ -16,6 +17,8 @@ func RegisterUserRoute(router *http.ServeMux, db *sql.DB) {
 }
 
 func handleUsers(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+	log.Println(r.Body)
+
 	if r.Method == http.MethodPost {
 		CreateNewUser(w, r, db)
 	}

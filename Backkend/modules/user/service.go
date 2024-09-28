@@ -11,8 +11,11 @@ import (
 )
 
 func CreateNewUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+	log.Println("Users called")
+
 	var newUser RequestNewUser
 	err := json.NewDecoder(r.Body).Decode(&newUser)
+	log.Println("Users called")
 
 	if err != nil {
 		log.Println(err)
@@ -24,6 +27,7 @@ func CreateNewUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		log.Println(err)
 		return
 	}
+	log.Println("Users called")
 
 	if userId != -1 {
 		w.WriteHeader(http.StatusConflict)
@@ -60,7 +64,10 @@ func CreateNewUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		log.Println(err)
 		return
 	}
-	fmt.Fprintf(w, jwtToken) // TODO: Better return handeling
+	err = json.NewEncoder(w).Encode(map[string]string{"token": jwtToken})
+	if err != nil {
+		return
+	}
 }
 
 func SignIn(w http.ResponseWriter, r *http.Request, db *sql.DB) {
@@ -93,5 +100,8 @@ func SignIn(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	fmt.Fprintf(w, token)
+	err = json.NewEncoder(w).Encode(map[string]string{"token": token})
+	if err != nil {
+		return
+	}
 }

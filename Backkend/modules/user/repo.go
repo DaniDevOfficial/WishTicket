@@ -61,10 +61,18 @@ func CreateUserInDB(userData DBNewUser, db *sql.DB) (int, error) {
 
 func GetUserById(id int, db *sql.DB) (UserFromDB, error) {
 
-	sql := "SELECT * FROM user WHERE user_id = ?"
+	sql := `SELECT
+    			username,
+    			email,
+    			password_hash,
+    			user_id
+    		FROM
+    		    user
+    		WHERE 
+        		user_id = ?`
 	row := db.QueryRow(sql, id)
 
 	var userData UserFromDB
-	err := row.Scan(&userData)
+	err := row.Scan(&userData.username, &userData.email, &userData.password_hash, &userData.user_id)
 	return userData, err
 }

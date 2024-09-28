@@ -16,7 +16,9 @@ func RegisterTicketRoute(router *http.ServeMux, db *sql.DB) {
 	router.HandleFunc(baseRoute+"/status", func(w http.ResponseWriter, r *http.Request) {
 		handleStatus(w, r, db)
 	})
-
+	router.HandleFunc(baseRoute+"/all", func(w http.ResponseWriter, r *http.Request) {
+		handleAllTickets(w, r, db)
+	})
 	router.HandleFunc(baseRoute+"/assignee/tickets", func(w http.ResponseWriter, r *http.Request) {
 		handleTicketAssignee(w, r, db)
 	})
@@ -36,6 +38,13 @@ func handleAssignee(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	if r.Method == http.MethodPost {
 		AddAssigneeToTicket(w, r, db)
 	}
+}
+
+func handleAllTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+	if r.Method == http.MethodGet {
+		GetAllAssignedAndOwnedTicketsForUser(w, r, db)
+	}
+
 }
 
 func handleStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {

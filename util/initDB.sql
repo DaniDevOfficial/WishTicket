@@ -16,6 +16,7 @@ CREATE TABLE ticket (
     ticket_id INT AUTO_INCREMENT PRIMARY KEY, 
     title VARCHAR(255) NOT NULL,
     description VARCHAR(255),
+    visibility ENUM('PUBLIC', 'PRIVATE') NOT NULL,
     creator_id INT,
     FOREIGN KEY (creator_id) REFERENCES user(user_id)
 );

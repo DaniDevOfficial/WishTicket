@@ -6,38 +6,34 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"wishticket/modules/user"
 	"wishticket/util/auth"
-	"wishticket/util/jwt"
 )
 
 // Tasks
 
 func GetAllOwnedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
-	fmt.Println("Ticket call")
-	tokenString, err := auth.GetJWTTokenFromHeader(r)
+	jwtData, _ := auth.GetJWTPayloadFromHeader(r) // TODO: do some error handeling here
 
+	ownerUsername := r.URL.Query().Get("username")
+	userId, err := user.GetUserIdByName(ownerUsername, db)
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprint(w, "Missing authorization header")
+		log.Printf("Error fetching tickets for user %d: %v", userId, err)
+		http.Error(w, `{"error": "Failed to retrieve tickets"}`, http.StatusInternalServerError)
+		return
+	}
+	onlyPublic := true
+	if userId == jwtData.UserId {
+		onlyPublic = false
+	}
+
+	tickets, err := GetAllOwnedTicketsFromDB(userId, db, onlyPublic)
+	if err != nil {
+		log.Printf("Error fetching tickets for user %d: %v", userId, err)
+		http.Error(w, `{"error": "Failed to retrieve tickets"}`, http.StatusInternalServerError)
 		return
 	}
 
-	// TODO: Get id from jwt
-	err = jwt.VerifyToken(tokenString)
-
-	jwtData, err := jwt.DecodeBearer(tokenString)
-	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
-		return
-	}
-	userId := jwtData.UserId
-	tickets, err := GetAllOwnedTicketsFromDB(userId, db)
-	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
-		return
-	}
 	log.Printf("User %d has %d tickets\n", userId, len(tickets))
 
 	// Respond with tickets in JSON format
@@ -48,21 +44,27 @@ func GetAllOwnedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		http.Error(w, `{"error": "Failed to encode tickets"}`, http.StatusInternalServerError)
 		return
 	}
+
+	log.Println("Successfully responded with tickets.")
 }
 
 func GetAssignedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
-	// TODO: get userId from jwt
-	jwtData, err := auth.GetJWTPayloadFromHeader(r)
+	jwtData, _ := auth.GetJWTPayloadFromHeader(r) // TODO: do some error handeling here
 
+	ownerUsername := r.URL.Query().Get("username")
+	userId, err := user.GetUserIdByName(ownerUsername, db)
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		log.Printf("Error fetching tickets for user %d: %v", userId, err)
+		http.Error(w, `{"error": "Failed to retrieve tickets"}`, http.StatusInternalServerError)
 		return
 	}
-	userId := jwtData.UserId
+	onlyPublic := true
+	if userId == jwtData.UserId {
+		onlyPublic = false
+	}
 
-	tickets, err := GetAssignedTicketsFromDB(userId, db)
+	tickets, err := GetAssignedTicketsFromDB(userId, db, onlyPublic)
 
 	if err != nil {
 		fmt.Fprintf(w, "Error happened")
@@ -71,6 +73,59 @@ func GetAssignedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(tickets)
+}
+
+func GetAllAssignedAndOwnedTicketsForUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+	jwtData, _ := auth.GetJWTPayloadFromHeader(r) // TODO: do some error handeling here
+	log.Println("Get all Assigned and owned Tickets for user ")
+	log.Println(jwtData)
+	ownerUsername := r.URL.Query().Get("username")
+	userId, err := user.GetUserIdByName(ownerUsername, db)
+	log.Println(ownerUsername)
+	if err != nil {
+		log.Printf("Error fetching tickets for user %d: %v", userId, err)
+		http.Error(w, `{"error": "Failed to retrieve tickets"}`, http.StatusInternalServerError)
+		return
+	}
+
+	onlyPublic := true
+	if userId == jwtData.UserId {
+		onlyPublic = false
+	}
+
+	assignedTickets, err := GetAssignedTicketsFromDB(userId, db, onlyPublic)
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
+	log.Println("assignedTickets: ")
+	log.Print(assignedTickets)
+
+	ownedTickets, err := GetAllOwnedTicketsFromDB(userId, db, onlyPublic)
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
+	log.Println("ownedTickets: ")
+	log.Print(ownedTickets)
+	response := struct {
+		Assigned interface{} `json:"assigned"`
+		Owned    interface{} `json:"owned"`
+	}{
+		Assigned: assignedTickets,
+		Owned:    ownedTickets,
+	}
+	jsonResponse, err := json.Marshal(response)
+	if err != nil {
+		http.Error(w, "Error converting to JSON", http.StatusInternalServerError)
+		log.Println("Error marshaling JSON:", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonResponse)
 }
 
 func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
@@ -90,10 +145,16 @@ func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		log.Println(err)
 		return
 	}
-
+	_, err = user.GetUserById(userData.UserId, db)
+	if err != nil {
+		fmt.Fprintf(w, "Error happened")
+		log.Println(err)
+		return
+	}
 	ticketDataInsert := TicketForInsert{
 		title:       ticketData.Title,
 		description: ticketData.Description,
+		visibility:  ticketData.Visibility,
 		creator_id:  userData.UserId,
 	}
 	err = CreateNewTicketInDB(ticketDataInsert, db)
@@ -103,6 +164,7 @@ func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		log.Println(err)
 		return
 	}
+	fmt.Fprintf(w, "yayyyy")
 }
 
 func ChangeTicketStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
@@ -175,7 +237,7 @@ func AddAssigneeToTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	// TODO: Either has to be creator or Assignee
 	ticket, err := GetTicketById(addAssignee.TicketId, db)
-	
+
 	if err != nil {
 		fmt.Fprintf(w, "Error happened")
 		log.Println(err)
