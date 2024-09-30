@@ -55,13 +55,17 @@ export function SignIn() {
             console.log(token)
             addToLocalStorage('auth', token)
             console.log(localStorage)
+            toast({
+                title: 'Sign in Successful',
+                description: 'Successfully signed in',
+                status: 'success'
+            })
             navigate("/user/" + username)
         } catch (e) {
             toast({
                 title: 'Sign In error.',
                 description: "whopsie 🤭🤭",
                 status: 'error',
-                isClosable: true,
             })
         }
     }
