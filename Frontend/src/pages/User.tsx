@@ -8,9 +8,9 @@ import {getAssignedAndOwnedTicketsByUsername} from "../repo/ticket/TicketReposit
 import {AssignedAndOwned} from "../types/props/ticket.ts";
 
 export function User() {
-    const params = useParams();
     const [username, setUsername] = useState<string>("")
     const [ticketData, setTicketData] = useState<AssignedAndOwned | undefined>()
+    const params = useParams();
     const toast = useToast()
 
     useEffect(() => {

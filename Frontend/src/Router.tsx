@@ -4,6 +4,7 @@ import { HomePage } from "./pages/Home";
 import { Signup } from "./pages/Signup";
 import {SignIn} from "./pages/SignIn.tsx";
 import {User} from "./pages/User.tsx";
+import {Ticket} from "./pages/Ticket.tsx";
 
 
 
@@ -28,6 +29,10 @@ const router = createHashRouter([
       {
         path: "/user/:username",
         element: <User />,
+      },
+      {
+        path: "/ticket/:ticketId",
+        element: <Ticket />,
       }
     ],
   },

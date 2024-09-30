@@ -144,7 +144,7 @@ func insertNewTicket(ticketData TicketForInsert, tx *sql.Tx) (int, error) {
 	return int(lastId), nil
 }
 
-func GetTicketById(ticketId int, db *sql.DB) (*TicketFromDB, error) {
+func GetTicketFromDB(ticketId int, db *sql.DB) (*TicketFromDB, error) {
 
 	sql := `
 		SELECT 
