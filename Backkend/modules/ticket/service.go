@@ -159,11 +159,7 @@ func GetTicketById(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	response := struct {
-		Ticket interface{} `json:"ticketData"`
-	}{
-		Ticket: ticketData,
-	}
+	response := ticketData
 
 	jsonResponse, err := json.Marshal(response)
 	if err != nil {

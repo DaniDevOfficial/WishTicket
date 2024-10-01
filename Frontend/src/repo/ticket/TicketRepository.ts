@@ -1,5 +1,5 @@
 import {getValueFromLocalStorage} from "../../utility/localStorage.ts";
-import {AssignedAndOwned} from "../../types/props/ticket.ts";
+import {AssignedAndOwned, TicketData} from "../../types/props/ticket.ts";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
@@ -30,7 +30,7 @@ export async function getAssignedAndOwnedTicketsByUsername(username: string): Pr
     }
 }
 
-export async function getTicketById(ticketId: number): Promise<AssignedAndOwned> {
+export async function getTicketById(ticketId: number): Promise<TicketData|undefined> {
     if (ticketId < 0){
         throw new Error("Ticket does not exits")
     }
@@ -48,7 +48,6 @@ export async function getTicketById(ticketId: number): Promise<AssignedAndOwned>
             const errorBody = await res.text();
             throw new Error(`error: ${errorBody || res.statusText}`);
         }
-        console.log(res)
         return await res.json()
     } catch (e) {
         throw new Error("Error while getting tickets")

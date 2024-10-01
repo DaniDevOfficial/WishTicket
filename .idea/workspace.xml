@@ -5,13 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a4fb9e02-e56d-4ca3-93b7-a23f949eed63" name="Changes" comment="2 - added toats for login errors and stuff">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backkend/modules/ticket/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/modules/ticket/service.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/components/user/TicketCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/user/TicketCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/components/user/UserTickets.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/user/UserTickets.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/pages/User.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/pages/User.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/pages/Ticket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/pages/Ticket.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/repo/ticket/TicketRepository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/repo/ticket/TicketRepository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/types/props/ticket.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/types/props/ticket.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,22 +25,22 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "DaniDevOfficial"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;DaniDevOfficial&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/DaniDevOfficial/WishTicket.git",
-    "accountId": "277bcdf2-9085-4a73-8b9b-be0bfd2102e6"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/DaniDevOfficial/WishTicket.git&quot;,
+    &quot;accountId&quot;: &quot;277bcdf2-9085-4a73-8b9b-be0bfd2102e6&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 6
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="2miJo69vFm8kxTv5FJkkOzJ8Mlx" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -54,7 +52,7 @@
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "git-widget-placeholder": "2-simple-account-page",
+    "git-widget-placeholder": "4-single-ticket-page",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
     "last_opened_file_path": "C:/Users/morec",
@@ -75,6 +73,17 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="2 - added toats for login errors and stuff" />
