@@ -7,6 +7,7 @@ export interface TicketData {
     },
     visibility: string,
     status: string,
+    dueDate: string,
     ticketId: number
 }
 

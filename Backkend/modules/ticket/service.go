@@ -186,13 +186,13 @@ func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	userData, err := auth.GetJWTPayloadFromHeader(r)
 	if err != nil {
 		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		log.Println(err, ": Get GetJWTPayloadFromHeader error")
 		return
 	}
 	_, err = user.GetUserById(userData.UserId, db)
 	if err != nil {
 		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		log.Println(err, ": Get UserByID error")
 		return
 	}
 	ticketDataInsert := TicketForInsert{
@@ -200,6 +200,7 @@ func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		description: ticketData.Description,
 		visibility:  ticketData.Visibility,
 		creator_id:  userData.UserId,
+		dueDate:     ticketData.DueDate,
 	}
 	err = CreateNewTicketInDB(ticketDataInsert, db)
 

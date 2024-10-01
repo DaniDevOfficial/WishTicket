@@ -123,13 +123,17 @@ func CreateNewTicketInDB(ticketData TicketForInsert, db *sql.DB) error {
 }
 
 func insertNewTicket(ticketData TicketForInsert, tx *sql.Tx) (int, error) {
-	sqlString := "INSERT INTO ticket (title, description, visibility, creator_id) VALUES (?, ?, ?, ?)"
+	sqlString := `	INSERT INTO 
+					    ticket 
+					    (title, description, visibility, dueDate, creator_id) 
+					VALUES 
+					    (?, ?, ?, ?, ?)`
 	stmt, err := tx.Prepare(sqlString)
 	if err != nil {
 		return -1, err
 	}
 	defer stmt.Close()
-	res, err := stmt.Exec(ticketData.title, ticketData.description, ticketData.visibility, ticketData.creator_id)
+	res, err := stmt.Exec(ticketData.title, ticketData.description, ticketData.visibility, ticketData.dueDate, ticketData.creator_id)
 
 	if err != nil {
 		return -1, err

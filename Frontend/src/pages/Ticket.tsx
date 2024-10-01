@@ -71,7 +71,7 @@ export function Ticket() {
                 justifyContent={"space-between"}
             >
                 <Box>
-                    test
+                    {}
                 </Box>
                 <Box>
                     <Status status={ticketData.status}/>

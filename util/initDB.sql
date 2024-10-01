@@ -17,6 +17,7 @@ CREATE TABLE ticket (
     title VARCHAR(255) NOT NULL,
     description VARCHAR(255),
     visibility ENUM('PUBLIC', 'PRIVATE') NOT NULL,
+    dueDate VARCHAR(255) NOT NULL,
     creator_id INT,
     FOREIGN KEY (creator_id) REFERENCES user(user_id)
 );
@@ -59,8 +60,8 @@ INSERT INTO user (username, email, password_hash)
 VALUES ('admin', 'bischof.david.db@gmail.com', '$2a$10$J77xTbXaoUJmo75nZRGcQupe6grmuscQzzamo5k4s9h3NRrdNFLu6'); -- password is admin
 
 -- Insert sample data into 'ticket' table
-INSERT INTO ticket (title, description, creator_id) 
-VALUES ('Test Ticket', 'This is a test ticket', 1);
+INSERT INTO ticket (title, description, dueDate, creator_id)
+VALUES ('Test Ticket', 'This is a test ticket', 'no due date', 1);
 
 -- Insert sample data into 'ticket_assigned' table
 INSERT INTO ticket_assigned (ticket_id, assigned_id) 

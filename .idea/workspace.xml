@@ -4,10 +4,15 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a4fb9e02-e56d-4ca3-93b7-a23f949eed63" name="Changes" comment="4 - ticket display and getting possible (even if ugly)">
+    <list default="true" id="a4fb9e02-e56d-4ca3-93b7-a23f949eed63" name="Changes" comment="4 - pretty status">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backkend/modules/ticket/repo.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/modules/ticket/repo.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/components/ticket/status.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/components/ticket/status.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backkend/modules/ticket/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/modules/ticket/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backkend/modules/ticket/types.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/modules/ticket/types.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backkend/modules/user/repo.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/modules/user/repo.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/pages/Ticket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/pages/Ticket.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/types/props/ticket.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/types/props/ticket.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/initDB.sql" beforeDir="false" afterPath="$PROJECT_DIR$/util/initDB.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +101,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="2 - added toats for login errors and stuff" />
     <MESSAGE value="4 - ticket display and getting possible (even if ugly)" />
-    <option name="LAST_COMMIT_MESSAGE" value="4 - ticket display and getting possible (even if ugly)" />
+    <MESSAGE value="4 - pretty status" />
+    <option name="LAST_COMMIT_MESSAGE" value="4 - pretty status" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
