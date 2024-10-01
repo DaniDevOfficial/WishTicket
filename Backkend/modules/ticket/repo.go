@@ -180,7 +180,7 @@ func insertNewTicketStatus(ticket_id int, tx *sql.Tx) error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(ticket_id, "Open")
+	_, err = stmt.Exec(ticket_id, "asdf")
 	if err != nil {
 		return err
 	}
