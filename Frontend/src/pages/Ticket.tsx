@@ -34,6 +34,7 @@ export function Ticket() {
                 })
                 //TODO: remove this dev stuff
                 setTicketData({
+                    dueDate: "234",
                     title: "title",
                     description: {
                         String: "description",

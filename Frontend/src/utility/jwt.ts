@@ -1,11 +1,14 @@
 
-interface jwtBody {
+export interface jwtBody {
     Exp: bigint,
     UserId: number,
     UserName: string,
 }
 
-export function getJWTBody(jwt: string): jwtBody {
+export function getJWTBody(jwt: string): jwtBody | null {
+    if (!jwt) {
+        throw new Error('No JWT');
+    }
     const parts = jwt.split('.');
 
     if (parts.length !== 3) {
