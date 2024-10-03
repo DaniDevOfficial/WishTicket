@@ -1,6 +1,6 @@
-import {FormControl, FormLabel, Icon, Input, InputGroup, InputRightElement, Stack, Textarea} from "@chakra-ui/react";
-import {FaEye, FaEyeSlash} from "react-icons/fa";
+import {FormControl, FormLabel, Input, InputGroup, Select, Stack, useToast} from "@chakra-ui/react";
 import React, {useState} from "react";
+import {createNewTicket} from "../repo/ticket/TicketRepository.ts";
 
 export function NewTicket() {
     const [formData, setFormData] = useState({
@@ -9,9 +9,9 @@ export function NewTicket() {
         dueDate: "",
         visibility: ""
     })
+    const toast = useToast();
 
-
-    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    function handleChange(e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) {
         const {name, value} = e.target
         setFormData(prevState => ({
             ...prevState,
@@ -20,10 +20,26 @@ export function NewTicket() {
     }
 
 
-    function submitForm() {
-        if(formData.title == "") {
-
+    async function submitForm(e: React.FormEvent) {
+        e.preventDefault()
+        if(formData.title.trim() === "") {
+            toast({
+                title: "Field Missing",
+                description: "Title has to be filled out",
+                status: "warning"
+            })
+            return
         }
+        if(formData.visibility.trim() === "") {
+            toast({
+                title: "Field Missing",
+                description: "Visibility has to be filled out",
+                status: "warning"
+            })
+            return
+        }
+        console.log(formData)
+        const response = await createNewTicket(formData)
     }
 
     return (
@@ -67,6 +83,22 @@ export function NewTicket() {
                                 value={formData.dueDate}
                                 onChange={handleChange}
                             />
+                        </InputGroup>
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel>Visibility</FormLabel>
+                        <InputGroup>
+                            <Select
+                                required
+                                focusBorderColor='primary.base'
+                                name="visibility"
+                                value={formData.visibility}
+                                onChange={handleChange}
+                                placeholder="Select visibility"
+                            >
+                                <option value="public">Public</option>
+                                <option value="private">Private</option>
+                            </Select>
                         </InputGroup>
                     </FormControl>
                     <FormControl>
