@@ -1,0 +1,26 @@
+package responses
+
+import (
+	"encoding/json"
+	"log"
+	"net/http"
+	"wishticket/util/error"
+)
+
+func ResponseWithJSON(response interface{}, statusCode int, w http.ResponseWriter) {
+	jsonResponse, err := json.Marshal(response)
+	if err != nil {
+		log.Println("Error converting to JSON:", err)
+		error.HttpResponse(w, "Error converting to JSON", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+
+	_, err = w.Write(jsonResponse)
+	if err != nil {
+		log.Println("Error sending response body:", err)
+		error.HttpResponse(w, "Error sending response body", http.StatusInternalServerError)
+	}
+}

@@ -22,7 +22,7 @@ export function NewTicket() {
 
     async function submitForm(e: React.FormEvent) {
         e.preventDefault()
-        if(formData.title.trim() === "") {
+        if (formData.title.trim() === "") {
             toast({
                 title: "Field Missing",
                 description: "Title has to be filled out",
@@ -30,7 +30,7 @@ export function NewTicket() {
             })
             return
         }
-        if(formData.visibility.trim() === "") {
+        if (formData.visibility.trim() === "") {
             toast({
                 title: "Field Missing",
                 description: "Visibility has to be filled out",
@@ -38,8 +38,21 @@ export function NewTicket() {
             })
             return
         }
-        console.log(formData)
-        const response = await createNewTicket(formData)
+        try {
+            const response = await createNewTicket(formData)
+            toast({
+                title: "Yayyy ticket created 😊😊😊😊",
+                description: "Ticket Created successfully",
+                status: "success"
+            })
+        } catch (e) {
+            alert(e.message)
+            toast({
+                title: "Creation went wrong",
+                description: "Cant create the ticket 😱😱😱😱",
+                status: "error"
+            })
+        }
     }
 
     return (

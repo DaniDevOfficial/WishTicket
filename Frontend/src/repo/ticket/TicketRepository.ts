@@ -1,5 +1,5 @@
 import {getValueFromLocalStorage} from "../../utility/localStorage.ts";
-import {AssignedAndOwned, NewTicket, TicketData} from "../../types/props/ticket.ts";
+import {AssignedAndOwned, TicketData} from "../../types/props/ticket.ts";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
@@ -80,6 +80,7 @@ export async function createNewTicket(ticketData: {
         }
         return await res.json()
     } catch (e) {
+        console.error(e.message)
         throw new Error("Error while Creating ticket")
     }
 }

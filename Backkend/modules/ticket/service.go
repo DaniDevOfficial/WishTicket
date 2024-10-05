@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"wishticket/modules/user"
 	"wishticket/util/auth"
+	"wishticket/util/error"
+	"wishticket/util/responses"
 )
 
 // Tickets
@@ -136,40 +138,27 @@ func GetTicketById(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	ticketIdStr := r.URL.Query().Get("ticketId")
 
-	// Check if ticketId is missing
 	if ticketIdStr == "" {
-		log.Printf("TicketId is missing from query params")
-		http.Error(w, "ticketId is missing from the query parameters", http.StatusBadRequest)
+		error.HttpResponse(w, "TicketId is missing from query params", http.StatusBadRequest)
 		return
 	}
 
-	// Convert ticketId to an integer
 	ticketId, err := strconv.Atoi(ticketIdStr)
 	if err != nil {
-		log.Printf("TicketId must be a valid integer")
-		http.Error(w, "ticketId must be a valid integer", http.StatusBadRequest)
+		error.HttpResponse(w, "TicketId must be a valid integer", http.StatusBadRequest)
 		return
 	}
 
 	ticketData, err := GetTicketFromDB(ticketId, db)
 
 	if err != nil {
-		log.Printf("Ticket Does not exist")
-		http.Error(w, "Ticket Does not exist", http.StatusBadRequest)
+		error.HttpResponse(w, "Ticket Does not exist", http.StatusBadRequest)
 		return
 	}
 
 	response := ticketData
 
-	jsonResponse, err := json.Marshal(response)
-	if err != nil {
-		http.Error(w, "Error converting to JSON", http.StatusInternalServerError)
-		log.Println("Error marshaling JSON:", err)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(jsonResponse)
+	responses.ResponseWithJSON(response, http.StatusOK, w)
 }
 
 func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
