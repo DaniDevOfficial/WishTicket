@@ -7,7 +7,7 @@ import (
 	"wishticket/util/error"
 )
 
-func ResponseWithJSON(response interface{}, statusCode int, w http.ResponseWriter) {
+func ResponseWithJSON(w http.ResponseWriter, response interface{}, statusCode int) {
 	jsonResponse, err := json.Marshal(response)
 	if err != nil {
 		log.Println("Error converting to JSON:", err)

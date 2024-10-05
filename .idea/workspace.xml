@@ -4,12 +4,13 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a4fb9e02-e56d-4ca3-93b7-a23f949eed63" name="Changes" comment="8 - creation of new tickets possible">
-      <change afterPath="$PROJECT_DIR$/Backkend/util/error/handler.go" afterDir="false" />
+    <list default="true" id="a4fb9e02-e56d-4ca3-93b7-a23f949eed63" name="Changes" comment="8 - implemented util error handeling and json response functions">
+      <change afterPath="$PROJECT_DIR$/Backkend/util/request/getFromURL.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backkend/modules/ticket/repo.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/modules/ticket/repo.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backkend/modules/ticket/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/modules/ticket/service.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/pages/newTicket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/pages/newTicket.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/repo/ticket/TicketRepository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/repo/ticket/TicketRepository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backkend/modules/user/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/modules/user/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backkend/util/responses/responses.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/util/responses/responses.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,7 +113,8 @@
     <MESSAGE value="4 - pretty status" />
     <MESSAGE value="8 - tired" />
     <MESSAGE value="8 - creation of new tickets possible" />
-    <option name="LAST_COMMIT_MESSAGE" value="8 - creation of new tickets possible" />
+    <MESSAGE value="8 - implemented util error handeling and json response functions" />
+    <option name="LAST_COMMIT_MESSAGE" value="8 - implemented util error handeling and json response functions" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

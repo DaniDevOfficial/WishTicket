@@ -3,11 +3,12 @@ package user
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
+	"wishticket/util/error"
 	"wishticket/util/hashing"
 	"wishticket/util/jwt"
+	"wishticket/util/responses"
 )
 
 func CreateNewUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
@@ -15,29 +16,26 @@ func CreateNewUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	var newUser RequestNewUser
 	err := json.NewDecoder(r.Body).Decode(&newUser)
-	log.Println("Users called")
 
 	if err != nil {
-		log.Println(err)
+		error.HttpResponse(w, "Error Decoding Request", http.StatusBadRequest)
 		return
 	}
 
 	userId, err := GetUserIdByName(newUser.Username, db)
 	if err != nil && err != sql.ErrNoRows {
-		log.Println(err)
+		error.HttpResponse(w, "Error checking for users", http.StatusInternalServerError)
 		return
 	}
-	log.Println("Users called")
 
 	if userId != -1 {
-		w.WriteHeader(http.StatusConflict)
-		fmt.Fprintf(w, "User already exists")
+		error.HttpResponse(w, "User Does already exist", http.StatusConflict)
 		return
 	}
 
 	hashedPassword, err := hashing.HashPassword(newUser.Password)
 	if err != nil {
-		log.Println(err)
+		error.HttpResponse(w, "Hashing error", http.StatusInternalServerError)
 		return
 	}
 
@@ -47,11 +45,9 @@ func CreateNewUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		password_hash: hashedPassword,
 	}
 
-	fmt.Println(userInDB)
 	id, err := CreateUserInDB(userInDB, db)
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		error.HttpResponse(w, "Error Creating User", http.StatusInternalServerError)
 		return
 	}
 	jwtUserData := jwt.JWTUser{
@@ -60,48 +56,51 @@ func CreateNewUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 	jwtToken, err := jwt.CreateToken(jwtUserData)
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		error.HttpResponse(w, "Error creating JWT", http.StatusInternalServerError)
 		return
 	}
-	err = json.NewEncoder(w).Encode(map[string]string{"token": jwtToken})
-	if err != nil {
-		return
+	response := struct {
+		token string
+	}{
+		token: jwtToken,
 	}
+	responses.ResponseWithJSON(w, response, http.StatusCreated)
 }
 
 func SignIn(w http.ResponseWriter, r *http.Request, db *sql.DB) {
-	var credentials SignInCredentials
 
+	var credentials SignInCredentials
 	err := json.NewDecoder(r.Body).Decode(&credentials)
 	if err != nil {
-		log.Println(err)
+		error.HttpResponse(w, "Error Decoding Request", http.StatusBadRequest)
 		return
 	}
+
 	userData, err := GetUserByName(credentials.Username, db)
-	//TODO: Implement Data validation, so all required data is present
 	if err != nil {
-		log.Println(err)
+		error.HttpResponse(w, "Wrong Password or Username", http.StatusBadRequest)
 		return
 	}
-	log.Println(userData.password_hash)
+
 	if !hashing.CheckHashedString(userData.password_hash, credentials.Password) {
-		fmt.Fprintf(w, "Wrong username or Password")
+		error.HttpResponse(w, "Wrong Password or Username", http.StatusBadRequest)
 		return
 	}
+
 	jwtUserData := jwt.JWTUser{
 		Username: userData.username,
 		UserId:   userData.user_id,
 	}
-	token, err := jwt.CreateToken(jwtUserData)
+	jwtToken, err := jwt.CreateToken(jwtUserData)
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		error.HttpResponse(w, "Error creating JWT", http.StatusInternalServerError)
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(map[string]string{"token": token})
-	if err != nil {
-		return
+	response := struct {
+		token string
+	}{
+		token: jwtToken,
 	}
+	responses.ResponseWithJSON(w, response, http.StatusCreated)
 }

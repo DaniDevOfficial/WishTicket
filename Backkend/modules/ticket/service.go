@@ -3,7 +3,6 @@ package ticket
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -21,8 +20,7 @@ func GetAllOwnedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	ownerUsername := r.URL.Query().Get("username")
 	userId, err := user.GetUserIdByName(ownerUsername, db)
 	if err != nil {
-		log.Printf("Error fetching tickets for user %d: %v", userId, err)
-		http.Error(w, `{"error": "Failed to retrieve tickets"}`, http.StatusInternalServerError)
+		error.HttpResponse(w, "Error fetching userData", http.StatusBadRequest)
 		return
 	}
 	onlyPublic := true
@@ -32,23 +30,13 @@ func GetAllOwnedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	tickets, err := GetAllOwnedTicketsFromDB(userId, db, onlyPublic)
 	if err != nil {
-		log.Printf("Error fetching tickets for user %d: %v", userId, err)
-		http.Error(w, `{"error": "Failed to retrieve tickets"}`, http.StatusInternalServerError)
+		error.HttpResponse(w, "Error while getting All owned Tickets From DB", http.StatusBadRequest)
 		return
 	}
 
 	log.Printf("User %d has %d tickets\n", userId, len(tickets))
 
-	// Respond with tickets in JSON format
-	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(tickets)
-	if err != nil {
-		log.Println("Error encoding tickets:", err)
-		http.Error(w, `{"error": "Failed to encode tickets"}`, http.StatusInternalServerError)
-		return
-	}
-
-	log.Println("Successfully responded with tickets.")
+	responses.ResponseWithJSON(w, tickets, http.StatusOK)
 }
 
 func GetAssignedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
@@ -58,8 +46,7 @@ func GetAssignedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	ownerUsername := r.URL.Query().Get("username")
 	userId, err := user.GetUserIdByName(ownerUsername, db)
 	if err != nil {
-		log.Printf("Error fetching tickets for user %d: %v", userId, err)
-		http.Error(w, `{"error": "Failed to retrieve tickets"}`, http.StatusInternalServerError)
+		error.HttpResponse(w, "Error fetching userData", http.StatusInternalServerError)
 		return
 	}
 	onlyPublic := true
@@ -70,24 +57,21 @@ func GetAssignedTickets(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	tickets, err := GetAssignedTicketsFromDB(userId, db, onlyPublic)
 
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		error.HttpResponse(w, "Error while getting All assigned Tickets From DB", http.StatusInternalServerError)
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(tickets)
+
+	responses.ResponseWithJSON(w, tickets, http.StatusOK)
+
 }
 
 func GetAllAssignedAndOwnedTicketsForUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	jwtData, _ := auth.GetJWTPayloadFromHeader(r) // TODO: do some error handeling here
-	log.Println("Get all Assigned and owned Tickets for user ")
-	log.Println(jwtData)
+	log.Println("Get all Assigned and owned Tickets for user")
 	ownerUsername := r.URL.Query().Get("username")
 	userId, err := user.GetUserIdByName(ownerUsername, db)
-	log.Println(ownerUsername)
 	if err != nil {
-		log.Printf("Error fetching tickets for user %d: %v", userId, err)
-		http.Error(w, `{"error": "Failed to retrieve tickets"}`, http.StatusInternalServerError)
+		error.HttpResponse(w, "Error fetching userData", http.StatusInternalServerError)
 		return
 	}
 
@@ -98,21 +82,16 @@ func GetAllAssignedAndOwnedTicketsForUser(w http.ResponseWriter, r *http.Request
 
 	assignedTickets, err := GetAssignedTicketsFromDB(userId, db, onlyPublic)
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		error.HttpResponse(w, "Error while getting All assigned Tickets From DB", http.StatusInternalServerError)
 		return
 	}
-	log.Println("assignedTickets: ")
-	log.Print(assignedTickets)
 
 	ownedTickets, err := GetAllOwnedTicketsFromDB(userId, db, onlyPublic)
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		error.HttpResponse(w, "Error while getting All owned Tickets From DB", http.StatusInternalServerError)
 		return
 	}
-	log.Println("ownedTickets: ")
-	log.Print(ownedTickets)
+
 	response := struct {
 		Assigned interface{} `json:"assigned"`
 		Owned    interface{} `json:"owned"`
@@ -120,15 +99,8 @@ func GetAllAssignedAndOwnedTicketsForUser(w http.ResponseWriter, r *http.Request
 		Assigned: assignedTickets,
 		Owned:    ownedTickets,
 	}
-	jsonResponse, err := json.Marshal(response)
-	if err != nil {
-		http.Error(w, "Error converting to JSON", http.StatusInternalServerError)
-		log.Println("Error marshaling JSON:", err)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(jsonResponse)
+
+	responses.ResponseWithJSON(w, response, http.StatusOK)
 }
 
 func GetTicketById(w http.ResponseWriter, r *http.Request, db *sql.DB) {
@@ -158,32 +130,31 @@ func GetTicketById(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	response := ticketData
 
-	responses.ResponseWithJSON(response, http.StatusOK, w)
+	responses.ResponseWithJSON(w, response, http.StatusOK)
 }
 
 func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	// TODO: some auth before letting Creation happen but idk how to do this currenty
 
-	var ticketData TicketRequest
-	err := json.NewDecoder(r.Body).Decode(&ticketData)
+	userData, err := auth.GetJWTPayloadFromHeader(r)
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		error.HttpResponse(w, "Error while Authenticating", http.StatusInternalServerError)
 		return
 	}
 
-	userData, err := auth.GetJWTPayloadFromHeader(r)
+	var ticketData TicketRequest
+	err = json.NewDecoder(r.Body).Decode(&ticketData)
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err, ": Get GetJWTPayloadFromHeader error")
+		error.HttpResponse(w, "Error decoding RequestBody", http.StatusBadRequest)
 		return
 	}
+
 	_, err = user.GetUserById(userData.UserId, db)
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err, ": Get UserByID error")
+		error.HttpResponse(w, "No user with this Id Found", http.StatusBadRequest)
 		return
 	}
+
 	ticketDataInsert := TicketForInsert{
 		title:       ticketData.Title,
 		description: ticketData.Description,
@@ -191,59 +162,66 @@ func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		creator_id:  userData.UserId,
 		dueDate:     ticketData.DueDate,
 	}
-	err = CreateNewTicketInDB(ticketDataInsert, db)
+	lastId, err := CreateNewTicketInDB(ticketDataInsert, db)
 
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		error.HttpResponse(w, "Error while creating ticket", http.StatusBadRequest)
 		return
 	}
-	fmt.Fprintf(w, "yayyyy")
+	response := struct {
+		message  string
+		ticketId int
+	}{
+		message:  "Successfully Created ticket",
+		ticketId: lastId,
+	}
+	responses.ResponseWithJSON(w, response, http.StatusCreated)
 }
 
 func ChangeTicketStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
-
-	var newStatus StatusRequest
-
-	err := json.NewDecoder(r.Body).Decode(&newStatus)
-
-	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
-		return
-	}
 
 	//TODO: get userId form jwt
 	userData, err := auth.GetJWTPayloadFromHeader(r)
 
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		error.HttpResponse(w, "Error Authenticating User", http.StatusUnauthorized)
+		return
+	}
+	var newStatus StatusRequest
+
+	err = json.NewDecoder(r.Body).Decode(&newStatus)
+
+	if err != nil {
+		error.HttpResponse(w, "Error Decoding Body", http.StatusInternalServerError)
 		return
 	}
 	userId := userData.UserId
 	ticket, err := GetTicketFromDB(newStatus.TicketId, db)
 	// TODO: Either has to be creator or Assignee
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		error.HttpResponse(w, "Error Fetching Ticket", http.StatusBadRequest)
 		return
 	}
 
 	if ticket.CreatorId != userId {
-		fmt.Fprintf(w, "Authorization Error")
-		log.Println("Wrong Creator id")
+		error.HttpResponse(w, "Not Allowed User", http.StatusUnauthorized)
 		return
 	}
 
 	_, err = UpdateTicketStatus(newStatus, db)
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		error.HttpResponse(w, "Error Updating Status", http.StatusInternalServerError)
 		return
 	}
-	log.Println("Updated Status")
-	fmt.Fprintf(w, "Updated Status")
+
+	response := struct {
+		message  string
+		ticketId int
+	}{
+		message:  "Successfully Updated Status",
+		ticketId: newStatus.TicketId,
+	}
+	responses.ResponseWithJSON(w, response, http.StatusOK)
 }
 
 func CommentOnTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
@@ -252,18 +230,17 @@ func CommentOnTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 func AddAssigneeToTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	log.Println("Get all tickets youre assigned to")
-	var addAssignee AddAssigneeRequest
-	err := json.NewDecoder(r.Body).Decode(&addAssignee)
-	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
-		return
-	}
 
 	userData, err := auth.GetJWTPayloadFromHeader(r)
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		error.HttpResponse(w, "Error Authenticating User", http.StatusUnauthorized)
+		return
+	}
+
+	var addAssignee AddAssigneeRequest
+	err = json.NewDecoder(r.Body).Decode(&addAssignee)
+	if err != nil {
+		error.HttpResponse(w, "Error Decoding Body", http.StatusInternalServerError)
 		return
 	}
 
@@ -273,25 +250,29 @@ func AddAssigneeToTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	ticket, err := GetTicketFromDB(addAssignee.TicketId, db)
 
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		error.HttpResponse(w, "Error Fetching Ticket", http.StatusBadRequest)
 		return
 	}
 
 	if ticket.CreatorId != userId {
-		fmt.Fprintf(w, "Authorization Error")
-		log.Println("Wrong Creator id")
+		error.HttpResponse(w, "Not Allowed User", http.StatusUnauthorized)
 		return
 	}
 
 	//TODO: check if someone blocked the other user
 	err = CreateNewAssignment(addAssignee, db)
 	if err != nil {
-		fmt.Fprintf(w, "Error happened")
-		log.Println(err)
+		error.HttpResponse(w, "Error Creating assignment", http.StatusInternalServerError)
 		return
 	}
-	//TODO: Success handler
+	response := struct {
+		message  string
+		ticketId int
+	}{
+		message:  "Successfully Added Assignee to Ticket",
+		ticketId: addAssignee.TicketId,
+	}
+	responses.ResponseWithJSON(w, response, http.StatusOK)
 }
 
 func RemoveAssigneeFromTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {

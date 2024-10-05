@@ -95,7 +95,7 @@ func GetAssignedTicketsFromDB(userId int, db *sql.DB, onlyPublic bool) ([]Ticket
 	return tickets, nil
 }
 
-func CreateNewTicketInDB(ticketData TicketForInsert, db *sql.DB) error {
+func CreateNewTicketInDB(ticketData TicketForInsert, db *sql.DB) (int, error) {
 
 	tx, err := db.Begin()
 
@@ -107,19 +107,19 @@ func CreateNewTicketInDB(ticketData TicketForInsert, db *sql.DB) error {
 
 	lastId, err := insertNewTicket(ticketData, tx)
 	if err != nil {
-		return err
+		return -1, err
 	}
 
-	err = insertNewTicketStatus(int(lastId), tx)
+	err = insertNewTicketStatus(lastId, tx)
 
 	if err != nil {
-		return err
+		return -1, err
 	}
 	if err := tx.Commit(); err != nil {
-		return err
+		return -1, err
 	}
 
-	return nil
+	return lastId, nil
 }
 
 func insertNewTicket(ticketData TicketForInsert, tx *sql.Tx) (int, error) {
