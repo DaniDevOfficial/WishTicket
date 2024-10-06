@@ -7,10 +7,17 @@ export interface TicketData {
     },
     visibility: string,
     status: string,
+    dueDate: string,
     ticketId: number
 }
 
 export interface AssignedAndOwned {
     "assigned": TicketData[],
     "owned": TicketData[]
+}
+export interface NewTicket {
+    title: string,
+    description: string | null | undefined,
+    dueDate: string,
+    visibility: "PUBLIC" | "PRIVATE"
 }

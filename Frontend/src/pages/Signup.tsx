@@ -16,7 +16,7 @@ import {FaEye, FaEyeSlash} from 'react-icons/fa'
 import {createNewUser} from "../repo/user/UserRepository.ts";
 import {NewUser} from "../types/user.ts";
 import {addToLocalStorage} from "../utility/localStorage.ts";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 
 export function Signup() {
@@ -28,6 +28,7 @@ export function Signup() {
         confirmPassword: ''
     })
     const toast = useToast()
+    const navigate = useNavigate()
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const {name, value} = e.target
@@ -59,6 +60,12 @@ export function Signup() {
             const res = await createNewUser(newUser)
             const token = res?.token
             addToLocalStorage('auth', token)
+            toast({
+                title: 'Signed up Successful',
+                description: 'Successfully created Account',
+                status: 'success'
+            })
+            navigate("/user/" + username)
         } catch (e) {
             toast({
                 title: 'Signup error.',

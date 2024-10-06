@@ -26,18 +26,20 @@ func CreateToken(userData JWTUser) (string, error) {
 	return tokenString, nil
 }
 
-func VerifyToken(tokenString string) error {
+func VerifyToken(tokenString string) (bool, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return secretKey, nil
 	})
+
 	if err != nil {
-		return err
-	}
-	if !token.Valid {
-		return fmt.Errorf("invalid token")
+		return false, err
 	}
 
-	return nil
+	if !token.Valid {
+		return true, nil
+	}
+
+	return true, nil
 }
 
 func DecodeBearer(tokenString string) (JWTPayload, error) {

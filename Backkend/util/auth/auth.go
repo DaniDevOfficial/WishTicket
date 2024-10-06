@@ -30,8 +30,8 @@ func GetJWTPayloadFromHeader(r *http.Request) (jwt.JWTPayload, error) {
 	if err != nil {
 		return jwtData, err
 	}
-	err = jwt.VerifyToken(jwtToken)
-	if err != nil {
+	valid, err := jwt.VerifyToken(jwtToken)
+	if err != nil || !valid {
 		return jwtData, err
 	}
 	jwtData, err = jwt.DecodeBearer(jwtToken)

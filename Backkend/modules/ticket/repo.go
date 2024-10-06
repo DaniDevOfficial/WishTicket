@@ -95,7 +95,7 @@ func GetAssignedTicketsFromDB(userId int, db *sql.DB, onlyPublic bool) ([]Ticket
 	return tickets, nil
 }
 
-func CreateNewTicketInDB(ticketData TicketForInsert, db *sql.DB) error {
+func CreateNewTicketInDB(ticketData TicketForInsert, db *sql.DB) (int, error) {
 
 	tx, err := db.Begin()
 
@@ -107,29 +107,33 @@ func CreateNewTicketInDB(ticketData TicketForInsert, db *sql.DB) error {
 
 	lastId, err := insertNewTicket(ticketData, tx)
 	if err != nil {
-		return err
+		return -1, err
 	}
 
-	err = insertNewTicketStatus(int(lastId), tx)
+	err = insertNewTicketStatus(lastId, tx)
 
 	if err != nil {
-		return err
+		return -1, err
 	}
 	if err := tx.Commit(); err != nil {
-		return err
+		return -1, err
 	}
 
-	return nil
+	return lastId, nil
 }
 
 func insertNewTicket(ticketData TicketForInsert, tx *sql.Tx) (int, error) {
-	sqlString := "INSERT INTO ticket (title, description, visibility, creator_id) VALUES (?, ?, ?, ?)"
+	sqlString := `	INSERT INTO 
+					    ticket 
+					    (title, description, visibility, dueDate, creator_id) 
+					VALUES 
+					    (?, ?, ?, ?, ?)`
 	stmt, err := tx.Prepare(sqlString)
 	if err != nil {
 		return -1, err
 	}
 	defer stmt.Close()
-	res, err := stmt.Exec(ticketData.title, ticketData.description, ticketData.visibility, ticketData.creator_id)
+	res, err := stmt.Exec(ticketData.title, ticketData.description, ticketData.visibility, ticketData.dueDate, ticketData.creator_id)
 
 	if err != nil {
 		return -1, err
@@ -144,7 +148,7 @@ func insertNewTicket(ticketData TicketForInsert, tx *sql.Tx) (int, error) {
 	return int(lastId), nil
 }
 
-func GetTicketById(ticketId int, db *sql.DB) (*TicketFromDB, error) {
+func GetTicketFromDB(ticketId int, db *sql.DB) (*TicketFromDB, error) {
 
 	sql := `
 		SELECT 
@@ -180,7 +184,7 @@ func insertNewTicketStatus(ticket_id int, tx *sql.Tx) error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(ticket_id, "Open")
+	_, err = stmt.Exec(ticket_id, "asdf")
 	if err != nil {
 		return err
 	}

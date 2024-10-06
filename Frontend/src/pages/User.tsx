@@ -1,18 +1,20 @@
-import {Box, useToast} from "@chakra-ui/react";
+import {Box, Button, useToast} from "@chakra-ui/react";
 import {UserProfileCard} from "../components/user/UserProfileCard.tsx";
-import {UserData} from "../types/props/user.ts";
 import {UserTickets} from "../components/user/UserTickets.tsx";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {getAssignedAndOwnedTicketsByUsername} from "../repo/ticket/TicketRepository.ts";
 import {AssignedAndOwned} from "../types/props/ticket.ts";
+import {UserData} from "../types/props/user.ts";
 
 export function User() {
-    const params = useParams();
+
+
     const [username, setUsername] = useState<string>("")
     const [ticketData, setTicketData] = useState<AssignedAndOwned | undefined>()
+    const params = useParams();
     const toast = useToast()
-
+    const navigate = useNavigate()
     useEffect(() => {
         setUsername(params.username ?? "")
     }, [params])
@@ -46,6 +48,7 @@ export function User() {
     return (
         <Box>
             <UserProfileCard userData={userData}/>
+            <Button onClick={() => {navigate("/ticket/new")}} colorScheme={"primary"}>Create New Ticket</Button>
             {ticketData && (
                 <UserTickets ticketsData={ticketData}/>
             )}
