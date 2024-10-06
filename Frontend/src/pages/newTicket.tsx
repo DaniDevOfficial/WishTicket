@@ -1,6 +1,7 @@
 import {FormControl, FormLabel, Input, InputGroup, Select, Stack, useToast} from "@chakra-ui/react";
 import React, {useState} from "react";
 import {createNewTicket} from "../repo/ticket/TicketRepository.ts";
+import {useNavigate} from "react-router-dom";
 
 export function NewTicket() {
     const [formData, setFormData] = useState({
@@ -10,7 +11,7 @@ export function NewTicket() {
         visibility: ""
     })
     const toast = useToast();
-
+    const navigate = useNavigate()
     function handleChange(e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) {
         const {name, value} = e.target
         setFormData(prevState => ({
@@ -45,8 +46,8 @@ export function NewTicket() {
                 description: "Ticket Created successfully",
                 status: "success"
             })
+            navigate("/ticket/" + response.ticketId)
         } catch (e) {
-            alert(e.message)
             toast({
                 title: "Creation went wrong",
                 description: "Cant create the ticket 😱😱😱😱",

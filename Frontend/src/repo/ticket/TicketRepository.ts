@@ -59,7 +59,10 @@ export async function createNewTicket(ticketData: {
     dueDate: string;
     description: string;
     title: string
-}): Promise<string> {
+}): Promise<{
+    message: string,
+    ticketId: number
+}> {
     try {
         const jwtToken = getValueFromLocalStorage('auth')
         const res = await fetch(DB_URL + 'ticket', {
