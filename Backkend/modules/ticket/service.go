@@ -169,18 +169,17 @@ func CreateNewTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 	response := struct {
-		message  string
-		ticketId int
+		Message  string `json:"message"`
+		TicketId int    `json:"ticketId"`
 	}{
-		message:  "Successfully Created ticket",
-		ticketId: lastId,
+		Message:  "Successfully Created ticket",
+		TicketId: lastId,
 	}
 	responses.ResponseWithJSON(w, response, http.StatusCreated)
 }
 
 func ChangeTicketStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
-	//TODO: get userId form jwt
 	userData, err := auth.GetJWTPayloadFromHeader(r)
 
 	if err != nil {
@@ -215,11 +214,11 @@ func ChangeTicketStatus(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 
 	response := struct {
-		message  string
-		ticketId int
+		Message  string `json:"message"`
+		TicketId int    `json:"ticketId"`
 	}{
-		message:  "Successfully Updated Status",
-		ticketId: newStatus.TicketId,
+		Message:  "Successfully Updated Status",
+		TicketId: newStatus.TicketId,
 	}
 	responses.ResponseWithJSON(w, response, http.StatusOK)
 }
@@ -266,11 +265,11 @@ func AddAssigneeToTicket(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 	response := struct {
-		message  string
-		ticketId int
+		Message  string `json:"message"`
+		TicketId int    `json:"ticketId"`
 	}{
-		message:  "Successfully Added Assignee to Ticket",
-		ticketId: addAssignee.TicketId,
+		Message:  "Successfully Added Assignee to Ticket",
+		TicketId: addAssignee.TicketId,
 	}
 	responses.ResponseWithJSON(w, response, http.StatusOK)
 }

@@ -4,13 +4,16 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a4fb9e02-e56d-4ca3-93b7-a23f949eed63" name="Changes" comment="8 - implemented util error handeling and json response functions">
-      <change afterPath="$PROJECT_DIR$/Backkend/util/request/getFromURL.go" afterDir="false" />
+    <list default="true" id="a4fb9e02-e56d-4ca3-93b7-a23f949eed63" name="Changes" comment="8 - refactored error and success handling for tickets and users">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backkend/modules/ticket/repo.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/modules/ticket/repo.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backkend/modules/ticket/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/modules/ticket/service.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backkend/modules/user/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/modules/user/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backkend/util/auth/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/util/auth/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backkend/util/jwt/jwt.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/util/jwt/jwt.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backkend/util/responses/responses.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/util/responses/responses.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/pages/SignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/pages/SignIn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/pages/Signup.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/pages/Signup.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/repo/user/UserRepository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/repo/user/UserRepository.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,23 +70,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultGoTemplateProperty": "Go File",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "git-widget-placeholder": "8-new-ticket",
-    "go.import.settings.migrated": "true",
-    "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "C:/Users/morec",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "C:\\Projekte\\WishTicket\\Frontend\\node_modules\\typescript\\lib"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;8-new-ticket&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/morec&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Projekte\\WishTicket\\Frontend\\node_modules\\typescript\\lib&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -114,7 +117,8 @@
     <MESSAGE value="8 - tired" />
     <MESSAGE value="8 - creation of new tickets possible" />
     <MESSAGE value="8 - implemented util error handeling and json response functions" />
-    <option name="LAST_COMMIT_MESSAGE" value="8 - implemented util error handeling and json response functions" />
+    <MESSAGE value="8 - refactored error and success handling for tickets and users" />
+    <option name="LAST_COMMIT_MESSAGE" value="8 - refactored error and success handling for tickets and users" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

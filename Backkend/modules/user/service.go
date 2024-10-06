@@ -60,9 +60,9 @@ func CreateNewUser(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 	response := struct {
-		token string
+		Token string `json:"token"`
 	}{
-		token: jwtToken,
+		Token: jwtToken,
 	}
 	responses.ResponseWithJSON(w, response, http.StatusCreated)
 }
@@ -98,9 +98,10 @@ func SignIn(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 
 	response := struct {
-		token string
+		Token string `json:"token"`
 	}{
-		token: jwtToken,
+		Token: jwtToken,
 	}
+
 	responses.ResponseWithJSON(w, response, http.StatusCreated)
 }

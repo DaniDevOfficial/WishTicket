@@ -20,7 +20,7 @@ import {Link, useNavigate} from "react-router-dom";
 export function SignIn() {
     const [showPassword, setShowPassword] = useState(false)
     const [formData, setFormData] = useState({
-        username: 'DaniDevOfficial',
+        username: 'dani',
         password: 'dani',
     })
     const navigate = useNavigate()
@@ -54,7 +54,6 @@ export function SignIn() {
             const token = res?.token
             console.log(token)
             addToLocalStorage('auth', token)
-            console.log(localStorage)
             toast({
                 title: 'Sign in Successful',
                 description: 'Successfully signed in',
