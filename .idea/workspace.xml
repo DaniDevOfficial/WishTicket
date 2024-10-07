@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a4fb9e02-e56d-4ca3-93b7-a23f949eed63" name="Changes" comment="8 - fixed json responses">
+    <list default="true" id="a4fb9e02-e56d-4ca3-93b7-a23f949eed63" name="Changes" comment="4 -">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/pages/newTicket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/pages/newTicket.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/repo/ticket/TicketRepository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/repo/ticket/TicketRepository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backkend/modules/ticket/repo.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/modules/ticket/repo.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backkend/modules/ticket/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/modules/ticket/service.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,7 +27,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="4-single-ticket-page" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -71,7 +71,7 @@
     &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;8-new-ticket&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;4-single-ticket-page&quot;,
     &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
     &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/morec&quot;,
