@@ -72,7 +72,7 @@ export function Ticket() {
                 justifyContent={"space-between"}
             >
                 <Box>
-                    {}
+                    {ticketData.dueDate !== "" ? ticketData.dueDate :  "no Due Date"}
                 </Box>
                 <Box>
                     <Status status={ticketData.status}/>

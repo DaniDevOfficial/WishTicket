@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a4fb9e02-e56d-4ca3-93b7-a23f949eed63" name="Changes" comment="4 -">
+    <list default="true" id="a4fb9e02-e56d-4ca3-93b7-a23f949eed63" name="Changes" comment="4 - users can only see public or  private assigned / owned tickets">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backkend/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backkend/modules/ticket/repo.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/modules/ticket/repo.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backkend/modules/ticket/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/Backkend/modules/ticket/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/pages/Ticket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/pages/Ticket.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/types/props/ticket.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/types/props/ticket.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +115,8 @@
     <MESSAGE value="8 - implemented util error handeling and json response functions" />
     <MESSAGE value="8 - refactored error and success handling for tickets and users" />
     <MESSAGE value="8 - fixed json responses" />
-    <option name="LAST_COMMIT_MESSAGE" value="8 - fixed json responses" />
+    <MESSAGE value="4 - users can only see public or  private assigned / owned tickets" />
+    <option name="LAST_COMMIT_MESSAGE" value="4 - users can only see public or  private assigned / owned tickets" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

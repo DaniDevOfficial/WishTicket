@@ -3,13 +3,13 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"net/http"
 	"wishticket/modules/dev"
 	"wishticket/modules/ticket"
 	"wishticket/modules/user"
-
-	_ "github.com/go-sql-driver/mysql"
+	"wishticket/util/auth"
 )
 
 var db *sql.DB
@@ -49,7 +49,14 @@ func corsMiddleware(next http.Handler) http.Handler {
 			w.WriteHeader(http.StatusOK)
 			return
 		}
-		log.Println(r.Method)
+		log.Println("New Request Started")
+		jwt, err := auth.GetJWTPayloadFromHeader(r)
+		log.Println("Request made By: ")
+		if err == nil {
+			log.Println(jwt)
+		} else {
+			log.Println("Anonymous")
+		}
 		log.Println(r.Method)
 		next.ServeHTTP(w, r)
 	})

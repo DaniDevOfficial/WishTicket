@@ -2,6 +2,7 @@ package ticket
 
 import (
 	"database/sql"
+	"log"
 )
 
 // Ticket
@@ -119,6 +120,7 @@ func CreateNewTicketInDB(ticketData TicketForInsert, db *sql.DB) (int, error) {
 }
 
 func insertNewTicket(ticketData TicketForInsert, tx *sql.Tx) (int, error) {
+	log.Println(ticketData)
 	sqlString := `	INSERT INTO 
 					    ticket 
 					    (title, description, visibility, dueDate, creator_id) 
@@ -151,6 +153,7 @@ func GetTicketFromDB(ticketId int, requesterId int, db *sql.DB) (*TicketFromDB, 
 			t.ticket_id, 
 			t.title, 
 			t.description,
+			t.dueDate,
 			t.visibility,
 			t.creator_id,
 			ts.status
@@ -158,7 +161,7 @@ func GetTicketFromDB(ticketId int, requesterId int, db *sql.DB) (*TicketFromDB, 
 			ticket t
 		JOIN
 			ticket_status ts ON t.ticket_id = ts.ticket_id
-		JOIN 
+		LEFT JOIN 
 			ticket_assigned ta ON t.ticket_id = ta.ticket_id
 		WHERE
 			t.ticket_id = ? 
@@ -170,7 +173,7 @@ func GetTicketFromDB(ticketId int, requesterId int, db *sql.DB) (*TicketFromDB, 
 	`
 	row := db.QueryRow(sql, ticketId, requesterId, requesterId)
 	var ticket TicketFromDB
-	err := row.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.Visibility, &ticket.CreatorId, &ticket.Status)
+	err := row.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.DueDate, &ticket.Visibility, &ticket.CreatorId, &ticket.Status)
 	if err != nil {
 		return nil, err
 	}
