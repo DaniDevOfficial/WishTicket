@@ -46,4 +46,5 @@ type TicketFromDB struct {
 	CreatorId   int            `json:"creatorId"`
 	DueDate     string         `json:"dueDate"`
 	Status      string         `json:"status"`
+	Assignees   sql.NullString `json:"assignees"`
 }

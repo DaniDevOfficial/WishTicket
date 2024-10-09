@@ -156,7 +156,8 @@ func GetTicketFromDB(ticketId int, requesterId int, db *sql.DB) (*TicketFromDB, 
 			t.dueDate,
 			t.visibility,
 			t.creator_id,
-			ts.status
+			ts.status,
+			GROUP_CONCAT(ta.assigned_id) AS assignees
 		FROM
 			ticket t
 		JOIN
@@ -170,10 +171,18 @@ func GetTicketFromDB(ticketId int, requesterId int, db *sql.DB) (*TicketFromDB, 
             OR ta.assigned_id = ?
             OR t.creator_id = ?
             )
+		GROUP BY 
+    		t.ticket_id, 
+    		t.title, 
+    		t.description,
+    		t.dueDate,
+    		t.visibility,
+    		t.creator_id,
+    		ts.status;
 	`
 	row := db.QueryRow(sql, ticketId, requesterId, requesterId)
 	var ticket TicketFromDB
-	err := row.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.DueDate, &ticket.Visibility, &ticket.CreatorId, &ticket.Status)
+	err := row.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.DueDate, &ticket.Visibility, &ticket.CreatorId, &ticket.Status, &ticket.Assignees)
 	if err != nil {
 		return nil, err
 	}
