@@ -2,34 +2,34 @@ package ticket
 
 import (
 	"database/sql"
+	"log"
 )
 
 // Ticket
 
-func GetAllOwnedTicketsFromDB(userId int, db *sql.DB, onlyPublic bool) ([]TicketFromDB, error) {
+func GetAllOwnedTicketsFromDB(userId int, requesterId int, db *sql.DB) ([]TicketFromDB, error) {
 	sql := `
-		SELECT 
-			t.ticket_id, 
-			t.title, 
-			t.description, 
-			t.visibility,
-			t.creator_id,
-			ts.status
-		FROM 
-			ticket t
-		JOIN
-			ticket_status ts ON t.ticket_id = ts.ticket_id
-		WHERE
-			t.creator_id = ?
-	`
-	if onlyPublic {
-		sql += `
-			AND 
-				t.visibility = 'PUBLIC'
-	`
-	}
+	SELECT DISTINCT 
+		t.ticket_id, 
+		t.title, 
+		t.description, 
+		t.visibility,
+		t.creator_id,
+		ts.status
+	FROM 
+		ticket t
+	JOIN
+		ticket_status ts ON t.ticket_id = ts.ticket_id AND t.creator_id = ?
+	LEFT JOIN
+		ticket_assigned ta ON t.ticket_id = ta.ticket_id 
+	WHERE
+		t.visibility = 'PUBLIC'
+		OR ta.assigned_id = ?
+		OR t.creator_id = ?
+`
+
 	var tickets []TicketFromDB
-	rows, err := db.Query(sql, userId)
+	rows, err := db.Query(sql, userId, requesterId, requesterId)
 
 	if err != nil {
 		return nil, err
@@ -48,33 +48,30 @@ func GetAllOwnedTicketsFromDB(userId int, db *sql.DB, onlyPublic bool) ([]Ticket
 
 }
 
-func GetAssignedTicketsFromDB(userId int, db *sql.DB, onlyPublic bool) ([]TicketFromDB, error) {
+func GetAssignedTicketsFromDB(userId int, requesterId int, db *sql.DB) ([]TicketFromDB, error) {
 
 	sql := `
-		SELECT DISTINCT
-			t.ticket_id,
-			t.title,
-			t.description,
-			t.visibility,
-			t.creator_id,
-			ts.status
-		FROM
-			ticket t
-		JOIN
-			ticket_assigned ta ON ta.ticket_id = t.ticket_id
-		JOIN
-			ticket_status ts ON t.ticket_id = ts.ticket_id
-		WHERE
-			ta.assigned_id = ?
-	`
-	if onlyPublic {
-		sql += `
-			AND 
-				t.visibility = 'PUBLIC'
-	`
-	}
+			SELECT DISTINCT
+				t.ticket_id,
+				t.title,
+				t.description,
+				t.visibility,
+				t.creator_id,
+				ts.status
+			FROM
+				ticket t
+			JOIN
+				ticket_assigned ta ON ta.ticket_id = t.ticket_id
+			JOIN
+				ticket_status ts ON t.ticket_id = ts.ticket_id
+			WHERE
+				t.visibility = 'PUBLIC' 
+				OR ta.assigned_id = ? 
+				OR t.creator_id = ?
+`
+
 	var tickets []TicketFromDB
-	rows, err := db.Query(sql, userId)
+	rows, err := db.Query(sql, userId, requesterId)
 	if err != nil {
 		return nil, err
 	}
@@ -123,6 +120,7 @@ func CreateNewTicketInDB(ticketData TicketForInsert, db *sql.DB) (int, error) {
 }
 
 func insertNewTicket(ticketData TicketForInsert, tx *sql.Tx) (int, error) {
+	log.Println(ticketData)
 	sqlString := `	INSERT INTO 
 					    ticket 
 					    (title, description, visibility, dueDate, creator_id) 
@@ -148,26 +146,43 @@ func insertNewTicket(ticketData TicketForInsert, tx *sql.Tx) (int, error) {
 	return int(lastId), nil
 }
 
-func GetTicketFromDB(ticketId int, db *sql.DB) (*TicketFromDB, error) {
+func GetTicketFromDB(ticketId int, requesterId int, db *sql.DB) (*TicketFromDB, error) {
 
 	sql := `
 		SELECT 
 			t.ticket_id, 
 			t.title, 
 			t.description,
+			t.dueDate,
 			t.visibility,
 			t.creator_id,
-			ts.status
+			ts.status,
+			GROUP_CONCAT(ta.assigned_id) AS assignees
 		FROM
 			ticket t
 		JOIN
 			ticket_status ts ON t.ticket_id = ts.ticket_id
+		LEFT JOIN 
+			ticket_assigned ta ON t.ticket_id = ta.ticket_id
 		WHERE
-			t.ticket_id = ?
+			t.ticket_id = ? 
+        AND (
+            t.visibility = 'PUBLIC' 
+            OR ta.assigned_id = ?
+            OR t.creator_id = ?
+            )
+		GROUP BY 
+    		t.ticket_id, 
+    		t.title, 
+    		t.description,
+    		t.dueDate,
+    		t.visibility,
+    		t.creator_id,
+    		ts.status;
 	`
-	row := db.QueryRow(sql, ticketId)
+	row := db.QueryRow(sql, ticketId, requesterId, requesterId)
 	var ticket TicketFromDB
-	err := row.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.Visibility, &ticket.CreatorId, &ticket.Status)
+	err := row.Scan(&ticket.TicketId, &ticket.Title, &ticket.Description, &ticket.DueDate, &ticket.Visibility, &ticket.CreatorId, &ticket.Status, &ticket.Assignees)
 	if err != nil {
 		return nil, err
 	}
